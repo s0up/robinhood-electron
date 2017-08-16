@@ -2,7 +2,7 @@
   "name": "robinhood-electron",
   "productName": "robinhood-electron",
   "version": "0.0.0",
-  "author": "s0up <mike@haxt.net>",
+  "author": "s0up",
   "description": "by s0up",
   "license": null,
   "main": "./dist/electron/main.js",
