@@ -3,15 +3,9 @@
   <nav id='header' class="navbar navbar-inverse navbar-static-top">
     <div class="container">
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
         <router-link to="/" class="navbar-brand">RHClient</router-link>
       </div>
-      <div id="navbar" class="navbar-collapse collapse">
+      <div id="navbar" class="">
         <div class="navbar-form navbar-left" role="search"  @keyup.enter="search">
             <div class="form-group">
                 <input v-model="ticker_search" type="text" class="form-control input-sm" placeholder="Ticker Search" @keyup="search" @blur="loseFocus">
