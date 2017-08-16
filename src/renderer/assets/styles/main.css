@@ -5,8 +5,13 @@
  background-color: #333333;
  color: #1A8066;
  width: 100%;
- padding: 5px 20px;
+ padding: 10px 20px 5px 10px;
 }
+
+.window-top-btn{
+  -webkit-app-region: no-drag;
+}
+
 .window-top span{
   padding: 0px 10px;
 }
