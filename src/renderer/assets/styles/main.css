@@ -206,8 +206,8 @@ h3 {
 }
 
 .btn-green {
-  color: #fff;
-  text-shadow: #000 0px 0px 1px,
+  color: #000;
+  /*text-shadow: #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px,
@@ -215,17 +215,17 @@ h3 {
               #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px,
-              #000 0px 0px 1px;
-  border: 1px solid rgba(255,255,255,0.5);
-  box-shadow: 0 8px 16px 0 rgba(255,255,255,0.1), 0 6px 20px 0 rgba(255,255,255,0.1);
+              #000 0px 0px 1px;*/
+  border: 1px solid rgba(255,255,255,0.2);
+  /*box-shadow: 0 8px 16px 0 rgba(255,255,255,0.1), 0 6px 20px 0 rgba(255,255,255,0.1);*/
 }
 .btn-green:hover {
   background-color: #11be89;
-  color: #fff;
+  color: #000;
 }
 .btn-warning {
-  color: #fff;
-  text-shadow: #000 0px 0px 1px,
+  color: #000;
+  /*text-shadow: #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px,
@@ -233,7 +233,7 @@ h3 {
               #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px,
-              #000 0px 0px 1px;
-  border: 1px solid rgba(255,255,255,0.5);
-  box-shadow: 0 8px 16px 0 rgba(255,255,255,0.1), 0 6px 20px 0 rgba(255,255,255,0.1);
+              #000 0px 0px 1px;*/
+  border: 1px solid rgba(255,255,255,0.2);
+  /*box-shadow: 0 8px 16px 0 rgba(255,255,255,0.1), 0 6px 20px 0 rgba(255,255,255,0.1);*/
 }
