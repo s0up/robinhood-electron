@@ -1,7 +1,7 @@
 <template>
 <div class="dashboard container-fluid">
   <div class="row">
-    <div class="col-lg-3">
+    <div class="col-md-3">
       <div class="panel panel-default ">
         <div class="panel-heading">Portfolio</div>
         <div class="panel-body">
@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <div class="col-lg-3">
+    <div class="col-md-3">
       <div class="panel panel-default ">
         <div class="panel-heading">Today's Gains/Losses</div>
         <div class="panel-body">
@@ -19,7 +19,7 @@
       </div>
     </div>
 
-    <div class="col-lg-3">
+    <div class="col-md-3">
       <div class="panel panel-default ">
         <div class="panel-heading">Cash Available</div>
         <div class="panel-body">
@@ -28,7 +28,7 @@
       </div>
     </div>
 
-    <div class="col-lg-3">
+    <div class="col-md-3">
       <div class="panel panel-default ">
         <div class="panel-heading">Uncleared Deposits</div>
         <div class="panel-body">

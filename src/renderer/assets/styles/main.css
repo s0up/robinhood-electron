@@ -137,11 +137,14 @@ h3 {
   border: 1px solid #222428 !important;
   background-color: #333333;
   border-bottom: none;
+  border-color: #fff !important;
+  border-bottom-color: transparent !important;
 }
 
 .nav-tabs li a{
   border: 1px solid #222428;
   border-bottom: none !important;
+  border-color: #fff;
 }
 
 .nav-tabs li a:hover{
@@ -154,6 +157,21 @@ h3 {
   border: 1px solid #222428;
   background-color: #333333;
   color: white;
+}
+
+.small {
+  margin: 0px auto;
+  background-color: #333333;
+}
+
+.panel-default {
+  background-color: #222428;
+  border-color: #fff;
+}
+.panel-default > .panel-heading {
+  color: #00CC99;
+  background-color: #333;
+  border-color: #fff;
 }
 
 .transfers td{
@@ -185,4 +203,37 @@ h3 {
 
 .search-results div.list-group a.list-group-item:hover{
   background-color: #faebd7 !important;
+}
+
+.btn-green {
+  color: #fff;
+  text-shadow: #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px;
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 8px 16px 0 rgba(255,255,255,0.1), 0 6px 20px 0 rgba(255,255,255,0.1);
+}
+.btn-green:hover {
+  background-color: #11be89;
+  color: #fff;
+}
+.btn-warning {
+  color: #fff;
+  text-shadow: #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px,
+              #000 0px 0px 1px;
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow: 0 8px 16px 0 rgba(255,255,255,0.1), 0 6px 20px 0 rgba(255,255,255,0.1);
 }
