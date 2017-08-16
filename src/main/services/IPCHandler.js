@@ -37,7 +37,7 @@ export default {
 
         delete arg['url'];
 
-        console.log("passing action " + action + " with data ", Object.values(arg));
+        console.log("Passing action " + action + " with data ", Object.values(arg) + " to robinhood-api library");
 
         let result = await rh[action].apply(rh.context, Object.values(arg));
 
@@ -47,72 +47,5 @@ export default {
         event.sender.send(requestId, {err: e.toString(), result: null});
       }
     });
-    /*
-    ipcMain.on('post', async function(event, arg){
-      try{
-        if(arg.url.indexOf('user')){
-          if(arg.url == '/user/login'){
-            let loginResult = await rh.connect(arg.username, arg.password);
-            event.returnValue = {err: null, result: loginResult};
-            return;
-          }
-
-          if(arg.url == '/user/checkLoginState'){
-            if(typeof rh.api.token !== 'undefined' && rh.api.token != null){
-              event.returnValue = {err: null, result: true, userData: {}};
-            }else{
-              event.returnValue = {err: null, result: false, userData: null};
-            }
-
-            return;
-          }
-        }
-
-        let action = arg.url.replace('/robinhood/', '');
-
-        delete arg['url'];
-
-        console.log("passing action " + action + " with data ", Object.values(arg));
-
-        let result = await rh[action].apply(rh.context, Object.values(arg));
-
-        event.returnValue = {err: null, result: result};
-      }catch(e){
-        event.returnValue = {err: e.toString(), result: null};
-      }
-    });*/
-    /*
-    ipcMain.on('/user/login', function(event, arg){
-      (async () => {
-        try{
-          let loginResult = await rh.connect(arg.username, arg.password);
-          event.returnValue = {err: null, result: loginResult};
-        }catch(e){
-          event.returnValue = {err: e.toString(), result: null};
-        }
-      })();
-    });
-
-    ipcMain.on('/user/checkLoginState', function(event, arg){
-      (async () => {
-        try{
-          if(typeof rh.api.token !== 'undefined' && rh.api.token != null){
-            event.returnValue = {err: null, result: true, userData: {}};
-          }else{
-            event.returnValue = {err: null, result: false, userData: null};
-          }
-        }catch(e){
-          event.returnValue = {err: e.toString(), result: null};
-        }
-      })();
-    });
-
-    ipcMain.on('/robinhood/getAccounts', async function(event, arg){
-      try{
-
-      }catch(e){
-        return res.json({})
-      }
-    });*/
   }
 }
