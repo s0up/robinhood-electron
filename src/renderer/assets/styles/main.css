@@ -76,11 +76,6 @@ h3 {
   color: #000000 !important;
 }
 
-.btn-green{
-  background-color: #21ce99;
-  color: #000000;
-}
-
 .alert-green{
   background-color: #21ce99;
   border: none;
@@ -206,7 +201,8 @@ h3 {
 }
 
 .btn-green {
-  color: #000;
+  background-color: #222428;
+  color: #fff;
   /*text-shadow: #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px,
@@ -216,15 +212,18 @@ h3 {
               #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px;*/
-  border: 1px solid rgba(255,255,255,0.2);
+
+  border: 1px solid #21ce99;
   /*box-shadow: 0 8px 16px 0 rgba(255,255,255,0.1), 0 6px 20px 0 rgba(255,255,255,0.1);*/
 }
 .btn-green:hover {
-  background-color: #11be89;
-  color: #000;
+  background-color: #121418;
+  color: #fff;
+
 }
 .btn-warning {
-  color: #000;
+  background-color: #11be89;
+  color: #fff;
   /*text-shadow: #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px,
@@ -234,6 +233,6 @@ h3 {
               #000 0px 0px 1px,
               #000 0px 0px 1px,
               #000 0px 0px 1px;*/
-  border: 1px solid rgba(255,255,255,0.2);
+  border: 1px solid #f0ad4e;
   /*box-shadow: 0 8px 16px 0 rgba(255,255,255,0.1), 0 6px 20px 0 rgba(255,255,255,0.1);*/
 }
