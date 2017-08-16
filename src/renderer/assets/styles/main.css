@@ -154,9 +154,11 @@ h3 {
 }
 
 .nav-tabs li a:hover{
-  border: 1px solid #222428;
+  border: 1px solid #fff;
   background-color: #333333;
   color: white;
+  border-bottom: none;
+  border-bottom-color: transparent !important;
 }
 
 .nav-tabs li.active a:hover{
@@ -175,9 +177,10 @@ h3 {
   border-color: #fff;
 }
 .panel-default > .panel-heading {
-  color: #00CC99;
+  color: #fff;
   background-color: #333;
   border-color: #fff;
+  font-weight: bold;
 }
 
 .transfers td{
