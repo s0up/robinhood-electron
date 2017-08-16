@@ -1,0 +1,188 @@
+@import url(https://fonts.googleapis.com/css?family=Nunito);
+
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+
+.form-signin .form-signin-heading, .form-signin .checkbox {
+  margin-bottom: 10px;
+}
+
+.form-signin .checkbox {
+  font-weight: normal;
+}
+
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+
+.form-signin input[type="email"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signin input[type="password"] {
+  margin-bottom: 10px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+body {
+  background-color: #090d16;
+  font-family: Nunito;
+  margin-bottom: 40px;
+}
+
+h3 {
+  margin-top: 5px;
+}
+
+.container-main {
+  background-color: #090d16;
+  color: white;
+}
+
+.container-main a {
+  color: white;
+}
+
+.text-success {
+  color: #21ce99;
+}
+
+.text-danger {
+  color: #fc4d2d;
+}
+
+.form-signin-heading{
+  color: white;
+}
+
+.btn-primary, .btn-primary:active, .btn-primary:active:focus, .btn-primary:hover{
+  background-color: #21ce99 !important;
+  color: #000000 !important;
+}
+
+.btn-green{
+  background-color: #21ce99;
+  color: #000000;
+}
+
+.alert-green{
+  background-color: #21ce99;
+  border: none;
+  color: #000000;
+}
+
+.btn-primary:hover{
+  background-color: #21ce99;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #222428;
+  height: 40px;
+  color: #9d9d9d;
+  padding-top: 10px;
+}
+
+#navbar {
+  background-color: #222428;
+}
+
+.navbar-brand{
+  color: #21ce99 !important;
+}
+
+.table-responsive {
+  border: 0px !important;
+}
+
+.table td {
+  padding: 20px 0px !important;
+  border-top: 1px solid #222428 !important;
+  border-bottom: 1px solid #222428 !important;
+}
+
+.positions td{
+  text-align: center;
+}
+
+.table th {
+  text-align: center;
+  padding: 10px 0px !important;
+}
+
+.table tr:hover{
+  background-color: #222428;
+}
+
+.nav-tabs li.active a{
+  color: white;
+  border: 1px solid #222428 !important;
+  background-color: #333333;
+  border-bottom: none;
+}
+
+.nav-tabs li a{
+  border: 1px solid #222428;
+  border-bottom: none !important;
+}
+
+.nav-tabs li a:hover{
+  border: 1px solid #222428;
+  background-color: #333333;
+  color: white;
+}
+
+.nav-tabs li.active a:hover{
+  border: 1px solid #222428;
+  background-color: #333333;
+  color: white;
+}
+
+.transfers td{
+  text-align: center;
+}
+
+.recent-orders td{
+  text-align: center;
+}
+
+.close{
+  opacity: none;
+  color: white;
+}
+
+.list-group-item{
+  background-color: #222428;
+}
+
+.search-results{
+  position: absolute;
+  margin-top: 5px;
+}
+
+.search-results div.list-group a.list-group-item{
+  background-color: white !important;
+  min-width: 220px;
+}
+
+.search-results div.list-group a.list-group-item:hover{
+  background-color: #faebd7 !important;
+}
