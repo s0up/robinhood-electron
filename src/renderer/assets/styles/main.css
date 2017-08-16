@@ -230,10 +230,9 @@ h3 {
 .btn-green:hover {
   background-color: #121418;
   color: #fff;
-
 }
 .btn-warning {
-  background-color: #11be89;
+  background-color: #222428 !important;
   color: #fff;
   /*text-shadow: #000 0px 0px 1px,
               #000 0px 0px 1px,
@@ -246,4 +245,9 @@ h3 {
               #000 0px 0px 1px;*/
   border: 1px solid #f0ad4e;
   /*box-shadow: 0 8px 16px 0 rgba(255,255,255,0.1), 0 6px 20px 0 rgba(255,255,255,0.1);*/
+}
+
+.btn-warning:hover {
+  background-color: #121418;
+  color: #fff;
 }
