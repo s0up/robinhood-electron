@@ -7,3 +7,7 @@ Want to try it out?  Check out our releases, and download one for your platform 
 # Want to help?
 
 Please do!  Any help would be incredible! Pull requests are much welcomed.
+
+# Download
+
+Latest releases at: https://github.com/s0up/robinhood-electron/releases
