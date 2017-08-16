@@ -251,11 +251,11 @@ export default {
   background-color: #222428;
   border-color: #fff;
 }
-.panel-default > .panel-heading {
+/*.panel-default > .panel-heading {
   color: #00CC99;
   background-color: #333;
   border-color: #fff;
-}
+}*/
 .small {
   margin: 0px auto;
   background-color: #333333;
