@@ -9,7 +9,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <router-link to="/" class="navbar-brand">Robinhood-Web</router-link>
+        <router-link to="/" class="navbar-brand">RHClient</router-link>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <div class="navbar-form navbar-left" role="search"  @keyup.enter="search">

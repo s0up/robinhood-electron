@@ -48,11 +48,6 @@
   <div class="small" v-if="graphData">
     <line-chart :chart-data="graphData" :options="chartOptions"></line-chart>
   </div>
-  <hr>
-  <h3>Put watchlist below here </h3>
-
-
-
 </div>
 </template>
 <script>

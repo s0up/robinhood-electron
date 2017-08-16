@@ -83,7 +83,7 @@
         <label>Order Total: &nbsp;</label><span v-money="orderTotal"></span>
       </div>
       <div class="form-group">
-        <button v-if="!submitting" @click="order" class="btn btn-primary">Submit Order</button>
+        <button v-if="!submitting" @click="order" class="btn btn-green">Submit Order</button>
         <button v-else class="btn">Submitting...</button>
       </div>
       <hr>

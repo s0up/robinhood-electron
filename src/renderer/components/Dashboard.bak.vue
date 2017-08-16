@@ -1,6 +1,6 @@
 <template>
 <div class="dashboard">
-  <h3 class="text-center">Welcome to Robinhood-Web</h3>
+  <h3 class="text-center">Welcome to Sherwood</h3>
   <div class="small" v-if="dayLineGraphData">
     <line-chart :chart-data="dayLineGraphData" :options="chartOptions"></line-chart>
   </div>
