@@ -57,6 +57,11 @@ export default {
     stockStats(){
 
     }
+  },
+  watch: {
+    quote(quote){
+      this.$emit('quote', quote);
+    }
   }
 }
 </script>

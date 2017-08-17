@@ -49,6 +49,18 @@
     <line-chart :chart-data="graphData" :options="chartOptions"></line-chart>
   </div>
   <hr>
+  <div v-if="currentWatchlist" class='watchlist'>
+    <h3>Watchlist</h3>
+    <div class="form-group">
+      <select v-model="selectedWatchlist" class="form-control">
+        <option v-bind:value="watchlist.url" v-for="watchlist in watchlists">
+          {{watchlist.name}}
+        </option>
+      </select>
+    </div>
+    <watchlist :watchlist="currentWatchlist"></watchlist>
+  </div>
+  <hr>
   <h3>Notifications</h3>
   <div v-if="cards">
     <div class='row' v-for="card in cards">
@@ -98,7 +110,8 @@ export default {
       graphInterval: '5minute',
       graphSpan: 'day',
       accountNumber: null,
-      currentWatchlist: null
+      currentWatchlist: null,
+      selectedWatchlist: ""
     }
   },
   computed: {
@@ -268,13 +281,14 @@ export default {
     watchlists(watchlists){
       if(!this.currentWatchlist){
         this.currentWatchlist = watchlists[0];
+        this.selectedWatchlist = this.currentWatchlist['url'];
       }
     },
     graphView() {
       this.updateData();
     },
-    currentWatchlist(watchlist){
-
+    selectedWatchlist(url){
+      this.currentWatchlist = this.watchlists.find(item => item.url == url);
     }
   },
   components: {

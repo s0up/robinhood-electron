@@ -259,22 +259,26 @@ export default class{
     }
   }
 
-  async getWatchlist(watchlist){
+  async getWatchlist(url){
     try{
-      let watchlist = await this.api.getResource({resource: watchlist});
+      let watchlist = await this.api.getResource(url);
 
       let promises = [];
       let instruments = [];
+      let quotes = [];
 
-      for(let item of watchlist){
+      for(let item of watchlist.results){
         promises.push((async () => {
-          instruments.push(await this.api.getResource({resource: item.instrument}));
+          let instrument = await this.api.getResource(item.instrument);
+          instruments.push(instrument);
+          quotes.push(await this.api.getResource(instrument.quote));
         })());
       }
 
       await Promise.all(promises);
 
       watchlist.instruments = instruments;
+      watchlist.quotes = quotes;
 
       return watchlist;
     }catch(e){

@@ -25,6 +25,7 @@ export default {
     tickerHistoricals: [],
     searchResults: [],
     watchlists: [],
+    watchlistData: [],
     cards: []
   },
 
@@ -315,6 +316,28 @@ export default {
       }
     },
 
+    async getWatchlist(state, url){
+      try{
+        let watchlist = await util.post('/robinhood/getWatchlist', {watchlist: url});
+
+        watchlist.result.url = url;
+
+        state.commit('addWatchlistData', watchlist.result);
+
+        watchlist.result.instruments.forEach(function(result){
+          state.commit('addInstrument', result);
+        });
+
+        watchlist.result.quotes.forEach(function(result){
+          state.commit('addQuote', result);
+        });
+
+        return watchlist;
+      }catch(e){
+        throw e;
+      }
+    },
+
     async getCards(state){
       try{
         let cards = await util.post('/robinhood/getCards');
@@ -481,6 +504,18 @@ export default {
 
     setCards: (state, cards) => {
       state.cards = cards;
+    },
+
+    addWatchlistData: (state, watchlistData) => {
+      let existingItem = state.watchlistData.findIndex(item => {
+        return item.url == watchlistData.url;
+      });
+
+      if(existingItem){
+        state.watchlistData.splice(existingItem, 1);
+      }
+
+      state.watchlistData.push(watchlistData);
     }
   },
 
@@ -593,6 +628,12 @@ export default {
 
     searchResults: (state) => {
       return state.searchResults;
+    },
+
+    watchlistData: (state) => {
+      return url => state.watchlistData.find(item => {
+        return item.url == url;
+      });
     },
 
     watchlists: (state) => state.watchlists,
