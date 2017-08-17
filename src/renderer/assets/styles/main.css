@@ -87,10 +87,7 @@ h3 {
   color: white;
 }
 
-.btn-primary, .btn-primary:active, .btn-primary:active:focus, .btn-primary:hover{
-  background-color: #21ce99 !important;
-  color: #000000 !important;
-}
+
 
 .alert-green{
   background-color: #21ce99;
@@ -98,9 +95,7 @@ h3 {
   color: #000000;
 }
 
-.btn-primary:hover{
-  background-color: #21ce99;
-}
+
 
 .footer {
   position: absolute;
@@ -258,4 +253,20 @@ h3 {
 .btn-warning:hover {
   background-color: #121418;
   color: #fff;
+}
+
+.form-control {
+  background-color: #222;
+  color: #fff;
+}
+
+.alert-green {
+  background-color: #222428;
+  color: #fff;
+  border: 1px solid #21ce99;
+}
+.btn-primary, .btn-primary:active, .btn-primary:active:focus, .btn-primary:hover {
+  background-color: #222428;
+  color: #fff;
+  border: 1px solid #21ce99;
 }
