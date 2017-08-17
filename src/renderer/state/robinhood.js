@@ -24,7 +24,8 @@ export default {
     historicals: [],
     tickerHistoricals: [],
     searchResults: [],
-    watchlists: []
+    watchlists: [],
+    cards: []
   },
 
   actions: {
@@ -312,6 +313,28 @@ export default {
       }catch(e){
         throw e;
       }
+    },
+
+    async getCards(state){
+      try{
+        let cards = await util.post('/robinhood/getCards');
+
+        state.commit('setCards', cards.result.results);
+
+        return;
+      }catch(e){
+        throw e;
+      }
+    },
+
+    async dismissCard(state, card){
+      try{
+        await util.post('/robinhood/dismissCard', {id: card});
+
+        return;
+      }catch(e){
+        throw e;
+      }
     }
   },
 
@@ -454,6 +477,10 @@ export default {
 
     setWatchlists: (state, watchlists) => {
       state.watchlists = watchlists;
+    },
+
+    setCards: (state, cards) => {
+      state.cards = cards;
     }
   },
 
@@ -568,6 +595,7 @@ export default {
       return state.searchResults;
     },
 
-    watchlists: (state) => state.watchlists
+    watchlists: (state) => state.watchlists,
+    cards: (state) => state.cards
   }
 }

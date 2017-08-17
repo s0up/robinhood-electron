@@ -73,6 +73,7 @@ export default {
     this.accountNumber = this.account.account_number;
     this.updateData();
     state.dispatch('robinhood/getWatchlists');
+    state.dispatch('robinhood/getCards');
   },
   data() { //Initializes ChartOptions as null
     return {
@@ -121,6 +122,9 @@ export default {
 
       state.getters['robinhood/resource'](this.currentWatchlist.url);
       //return state.getters['robinhood/resource'](this.currentWatchlist.url);
+    },
+    cards(){
+      return state.getters['robinhood/cards'];
     }
   },
   methods: {

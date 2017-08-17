@@ -258,4 +258,20 @@ export default class{
       throw e;
     }
   }
+
+  async getCards(){
+    try{
+      return await this.api.getCards();
+    }catch(e){
+      throw e;
+    }
+  }
+
+  async dismissCard(card){
+    try{
+      return await this.api.dismissCard({id: card});
+    }catch(e){
+      throw e;
+    }
+  }
 }
