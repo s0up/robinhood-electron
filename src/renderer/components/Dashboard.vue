@@ -1,5 +1,6 @@
 <template>
 <div class="dashboard container-fluid">
+  <h3>Dashboard Overview</h3>
   <div class="row">
     <div class="col-md-3">
       <div class="panel panel-default ">

@@ -33,6 +33,9 @@ export default {
       this.watchlist_timer = setTimeout(() => this.updateWatchlist(), 10000);
     }
   },
+  beforeDestroy(){
+    clearTimeout(this.watchlist_timer);
+  },
   components: {
     'watchlist-item': WatchlistItem
   }
