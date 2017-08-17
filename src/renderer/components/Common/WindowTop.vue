@@ -11,7 +11,22 @@
 const remote = require('electron').remote;
 
 export default {
+  created() {
+    let window = remote.getCurrentWindow();
+
+    window.on('resize', () => {
+      this.adjustSize();
+    });
+  },
+  mounted(){
+    this.adjustSize();
+  },
   methods: {
+    adjustSize(){
+      let window = remote.getCurrentWindow();
+      let size = window.getSize();
+      $("#content").css('height', (size[1] - 75) + 'px');
+    },
     minimize() {
       let window = remote.getCurrentWindow();
       window.minimize();
@@ -24,7 +39,7 @@ export default {
         window.unmaximize();
       }
     },
-    close(){
+    close() {
       let window = remote.getCurrentWindow();
       window.close();
     }

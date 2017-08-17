@@ -1,8 +1,10 @@
 <template>
   <div v-if='loginStateChecked' id="app">
     <window-top></window-top>
-    <login-page v-if="!loggedIn"></login-page>
-    <layout v-if="loggedIn === true"></layout>
+    <div id='content'>
+      <login-page v-if="!loggedIn"></login-page>
+      <layout v-if="loggedIn === true"></layout>
+    </div>
   </div>
 </template>
 <script>

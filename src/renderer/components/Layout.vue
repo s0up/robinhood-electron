@@ -1,6 +1,6 @@
 <template>
-  <div class='dashboard-layout'>
-    <!--<main-nav></main-nav>-->
+  <div class='dashboard'>
+    <main-nav></main-nav>
     <div v-if="fatalError">
       <h1 class="display-3 text-center text-danger">Oh Snap!</h1>
       <p class="lead text-center text-danger">{{fatalError}}</p>

@@ -1,44 +1,23 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);
 
 
+body{
+  overflow: hidden !important;
+}
 
 .window-top{
  -webkit-app-region: drag;
- -webkit-user-select: none;
  background-color: #333333;
  color: #1A8066;
  width: 100%;
  padding: 10px 20px 5px 10px;
-
- position: fixed;
- top: 0;
- z-index: 9999;
- /*
- z-index: 2;*/
  height: 35px;
 }
 
-.dashboard-layout{
-  margin-top: 100px;
+#content{
+  overflow-y: scroll;
+  border-color: 1px solid red !important;
 }
-
-/*
-#header{
-  top: 35px;
-}*/
-
-/*
-.main-content{
-  margin-top: 45px;
-  -webkit-app-region: no-drag;
-}*/
-
-/*
-.window-top-btns{
-  -webkit-app-region: no-drag;
-  position: fixed;
-}*/
-
 
 .window-top span{
   padding: 0px 10px;
