@@ -270,3 +270,6 @@ h3 {
   color: #fff;
   border: 1px solid #21ce99;
 }
+.btn-primary:hover {
+  background-color: #121418;
+}
