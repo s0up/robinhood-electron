@@ -67,10 +67,10 @@
     <div class='row' v-for="card in cards">
       <div class='col-xs-12'>
         <div class="panel panel-default ">
-          <h5 class="panel-heading">
+          <div class="panel-heading">
             {{card.title}}
             <button @click="dismissCard(card)" type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          </h5>
+          </div>
           <div class="panel-body">
             <span>{{card.message}}</span>
           </div>
