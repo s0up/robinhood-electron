@@ -273,3 +273,7 @@ h3 {
 .btn-primary:hover {
   background-color: #121418;
 }
+.btn-default {
+  background-color: #222428;
+  color: #fff;
+}
