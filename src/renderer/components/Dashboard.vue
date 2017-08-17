@@ -48,7 +48,23 @@
   <div class="small" v-if="graphData">
     <line-chart :chart-data="graphData" :options="chartOptions"></line-chart>
   </div>
-  <watchlist v-if="currentWatchlist" :watchlist="currentWatchlist"></watchlist>
+  <hr>
+  <h3>Notifications</h3>
+  <div v-if="cards">
+    <div class='row' v-for="card in cards">
+      <div class='col-xs-12'>
+        <div class="panel panel-default ">
+          <h5 class="panel-heading">
+            {{card.title}}
+            <button @click="dismissCard(card)" type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+          </h5>
+          <div class="panel-body">
+            <span>{{card.message}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 <script>
@@ -137,7 +153,18 @@ export default {
 
       this.updateTimer = setTimeout(() => this.updateData(), 10000);
     },
+    async dismissCard(card){
+      try{
+        let urlPieces = card.url.split('/');
 
+        let cardId = urlPieces[urlPieces.length - 2];
+
+        await state.dispatch('robinhood/dismissCard', cardId);
+        await state.dispatch('robinhood/getCards');
+      }catch(e){
+        console.log("Card removal failed", e);
+      }
+    },
     getLineGraphData(data) {
       let lineGraphData = [];
       let priceData = [];
