@@ -1,6 +1,6 @@
 <template>
   <div class='watchlist'>
-    woohoo
+    
   </div>
 </template>
 <script>
