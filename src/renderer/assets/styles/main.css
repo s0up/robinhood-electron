@@ -1,22 +1,37 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);
 
+.main-content{
+  margin-top: 45px;
+  -webkit-app-region: no-drag;
+}
+
+body{
+  -webkit-app-region: drag;
+}
+
+input{
+  -webkit-app-region: no-drag;
+}
+
 .window-top{
  -webkit-app-region: drag;
  background-color: #333333;
  color: #1A8066;
- width: 100%;
+ width: 100vw;
  padding: 10px 20px 5px 10px;
  position: fixed;
  top: 0;
  z-index: 2;
+ height: 35px;
 }
 
 #header{
   top: 35px;
 }
 
-.window-top-btn{
+.window-top-btns{
   -webkit-app-region: no-drag;
+  position: fixed;
 }
 
 .window-top span{
@@ -26,7 +41,7 @@
 .form-signin {
   max-width: 330px;
   padding: 15px;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
 .form-signin .form-signin-heading, .form-signin .checkbox {

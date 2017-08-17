@@ -1,8 +1,10 @@
 <template>
 <div class='window-top text-right' style="-webkit-app-region: drag">
-  <span @click="minimize" class="glyphicon glyphicon-chevron-down window-top-btn"></span>
-  <span @click="maximize" class="glyphicon glyphicon-new-window window-top-btn"></span>
-  <span @click="close" class="glyphicon glyphicon-remove window-top-btn"></span>
+  <div id="window-top-btns">
+    <span @click="minimize" class="glyphicon glyphicon-chevron-down window-top-btn"></span>
+    <span @click="maximize" class="glyphicon glyphicon-new-window window-top-btn"></span>
+    <span @click="close" class="glyphicon glyphicon-remove window-top-btn"></span>
+  </div>
 </div>
 </template>
 <script>
