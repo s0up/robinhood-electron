@@ -259,6 +259,29 @@ export default class{
     }
   }
 
+  async getWatchlist(watchlist){
+    try{
+      let watchlist = await this.api.getResource({resource: watchlist});
+
+      let promises = [];
+      let instruments = [];
+
+      for(let item of watchlist){
+        promises.push((async () => {
+          instruments.push(await this.api.getResource({resource: item.instrument}));
+        })());
+      }
+
+      await Promise.all(promises);
+
+      watchlist.instruments = instruments;
+
+      return watchlist;
+    }catch(e){
+      throw e;
+    }
+  }
+
   async getCards(){
     try{
       return await this.api.getCards();
