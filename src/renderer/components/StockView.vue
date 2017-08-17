@@ -58,7 +58,7 @@
         </thead>
         <tbody>
           <tr v-for="item in news.results">
-            <td><a v-bind:href="item.url" target="_blank">{{item.title}}</a></td>
+            <td><a @click="openUrl(item.url)">{{item.title}}</a></td>
             <td v-from-now="item.published_at"></td>
           </tr>
         </tbody>
@@ -68,6 +68,7 @@
 </div>
 </template>
 <script>
+import {shell} from 'electron';
 import NewOrder from '@/components/NewOrder';
 import Position from '@/components/Positions/Position';
 import PositionTable from '@/components/Positions/PositionTable';
@@ -197,6 +198,9 @@ export default {
     }
   },
   methods: {
+    openUrl(url){
+      shell.openExternal(url);
+    },
     orderComplete() {
       setTimeout(() => this.isBuying = false, 5000);
     },
