@@ -1,6 +1,15 @@
 <template>
   <div v-if="watchlistData" class='watchlist'>
-    <table class='watchlist-tbl table table-condensed'>
+    <table class='watchlist-tbl table table-condensed text-left'>
+      <thead>
+        <tr>
+          <th>Symbol</th>
+          <th>Last Trade Price</th>
+          <th>Previous Close Price</th>
+          <th>Ask Price</th>
+          <th>Bid Price</th>
+        </tr>
+      </thead>
       <watchlist-item :data="watchlistItem" v-for="watchlistItem in watchlistData.results" :key="watchlistItem.url"></watchlist-item>
     </table>
   </div>

@@ -1,38 +1,44 @@
 @import url(https://fonts.googleapis.com/css?family=Nunito);
 
-.main-content{
-  margin-top: 45px;
-  -webkit-app-region: no-drag;
-}
 
-body{
-  -webkit-app-region: drag;
-}
-
-input{
-  -webkit-app-region: no-drag;
-}
 
 .window-top{
  -webkit-app-region: drag;
+ -webkit-user-select: none;
  background-color: #333333;
  color: #1A8066;
- width: 100vw;
+ width: 100%;
  padding: 10px 20px 5px 10px;
+
  position: fixed;
  top: 0;
- z-index: 2;
+ z-index: 9999;
+ /*
+ z-index: 2;*/
  height: 35px;
 }
 
-#header{
-  top: 35px;
+.dashboard-layout{
+  margin-top: 100px;
 }
 
+/*
+#header{
+  top: 35px;
+}*/
+
+/*
+.main-content{
+  margin-top: 45px;
+  -webkit-app-region: no-drag;
+}*/
+
+/*
 .window-top-btns{
   -webkit-app-region: no-drag;
   position: fixed;
-}
+}*/
+
 
 .window-top span{
   padding: 0px 10px;
@@ -224,6 +230,7 @@ h3 {
 
 .search-results{
   position: absolute;
+  z-index: 1;
   margin-top: 5px;
 }
 
@@ -298,4 +305,8 @@ h3 {
 .btn-default {
   background-color: #222428;
   color: #fff;
+}
+
+.watchlist-tbl thead tr th{
+  text-align: left;
 }

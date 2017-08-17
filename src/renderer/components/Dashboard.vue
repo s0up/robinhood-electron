@@ -172,8 +172,13 @@ export default {
 
         let cardId = urlPieces[urlPieces.length - 2];
 
+        let cards = state.getters['robinhood/cards'];
+
+        cards.splice(cards.findIndex(item => item.url == card.url), 1);
+
+        state.commit('setCards', cards);
+
         await state.dispatch('robinhood/dismissCard', cardId);
-        await state.dispatch('robinhood/getCards');
       }catch(e){
         console.log("Card removal failed", e);
       }

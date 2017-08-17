@@ -1,16 +1,14 @@
 <template>
   <div class='dashboard-layout'>
-    <main-nav></main-nav>
-    <div class='main-content'>
-      <div v-if="fatalError">
-        <h1 class="display-3 text-center text-danger">Oh Snap!</h1>
-        <p class="lead text-center text-danger">{{fatalError}}</p>
-      </div>
-      <div class='container-fluid container-main'>
-        <router-view v-if="loaded"></router-view>
-      </div>
-      <footer-page v-if="loaded"></footer-page>
+    <!--<main-nav></main-nav>-->
+    <div v-if="fatalError">
+      <h1 class="display-3 text-center text-danger">Oh Snap!</h1>
+      <p class="lead text-center text-danger">{{fatalError}}</p>
     </div>
+    <div class='container-fluid container-main'>
+      <router-view v-if="loaded"></router-view>
+    </div>
+    <footer-page v-if="loaded"></footer-page>
   </div>
 </template>
 <script>
