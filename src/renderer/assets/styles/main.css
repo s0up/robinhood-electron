@@ -6,6 +6,13 @@
  color: #1A8066;
  width: 100%;
  padding: 10px 20px 5px 10px;
+ position: fixed;
+ top: 0;
+ z-index: 2;
+}
+
+#header{
+  top: 35px;
 }
 
 .window-top-btn{

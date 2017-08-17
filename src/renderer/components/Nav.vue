@@ -1,6 +1,6 @@
 <!-- Static navbar -->
 <template>
-  <nav id='header' class="navbar navbar-inverse navbar-static-top">
+  <nav id='header' class="navbar navbar-inverse">
     <div class="container">
       <div class="navbar-header">
         <router-link to="/" class="navbar-brand">RHClient</router-link>
