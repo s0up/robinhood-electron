@@ -250,4 +250,12 @@ export default class{
       throw e;
     }
   }
+
+  async getWatchlists(){
+    try{
+      return await this.api.getWatchlists();
+    }catch(e){
+      throw e;
+    }
+  }
 }

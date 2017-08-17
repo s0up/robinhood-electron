@@ -48,11 +48,13 @@
   <div class="small" v-if="graphData">
     <line-chart :chart-data="graphData" :options="chartOptions"></line-chart>
   </div>
+  <watchlist v-if="currentWatchlist" :watchlist="currentWatchlist"></watchlist>
 </div>
 </template>
 <script>
 import state from '@/state';
 import LineChart from '@/components/Graphs/LineChart';
+import Watchlist from '@/components/Watchlist';
 import moment from 'moment';
 
 /*
@@ -70,6 +72,7 @@ export default {
   created() { //Requests historical data from Robinhood for the following attributes
     this.accountNumber = this.account.account_number;
     this.updateData();
+    state.dispatch('robinhood/getWatchlists');
   },
   data() { //Initializes ChartOptions as null
     return {
@@ -77,7 +80,8 @@ export default {
       updateTimer: setTimeout(function() {}, 0),
       graphInterval: '5minute',
       graphSpan: 'day',
-      accountNumber: null
+      accountNumber: null,
+      currentWatchlist: null
     }
   },
   computed: {
@@ -106,6 +110,17 @@ export default {
       }
 
       return this.getLineGraphData(this.historicals);
+    },
+    watchlists(){
+      return state.getters['robinhood/watchlists'];
+    },
+    watchlistData(){
+      if(!this.currentWatchlist){
+        return;
+      }
+
+      state.getters['robinhood/resource'](this.currentWatchlist.url);
+      //return state.getters['robinhood/resource'](this.currentWatchlist.url);
     }
   },
   methods: {
@@ -219,12 +234,21 @@ export default {
     }
   },
   watch: {
+    watchlists(watchlists){
+      if(!this.currentWatchlist){
+        this.currentWatchlist = watchlists[0];
+      }
+    },
     graphView() {
       this.updateData();
+    },
+    currentWatchlist(watchlist){
+
     }
   },
   components: {
-    'line-chart': LineChart
+    'line-chart': LineChart,
+    'watchlist': Watchlist
   },
   beforeDestroy() {
     clearTimeout(this.updateTimer);

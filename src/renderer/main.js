@@ -25,6 +25,7 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue);
 
+console.log(Vue.config);
 /*Userland css*/
 require('@/assets/styles/main.css');
 
@@ -33,7 +34,6 @@ import VueLodash from 'vue-lodash/dist/vue-lodash.min'
 
 Vue.use(VueLodash, lodash)
 
-Vue.config.productionTip = false;
 
 Directives.register(Vue);
 

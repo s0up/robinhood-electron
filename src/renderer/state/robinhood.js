@@ -23,7 +23,8 @@ export default {
     markets: null,
     historicals: [],
     tickerHistoricals: [],
-    searchResults: []
+    searchResults: [],
+    watchlists: []
   },
 
   actions: {
@@ -217,7 +218,7 @@ export default {
         let newsResult = await util.post('/robinhood/getResource', {
           resource: 'https://api.robinhood.com/midlands/news/' + symbol + '/'
         });
-        
+
         let news = newsResult.result;
         news.symbol = symbol;
 
@@ -299,6 +300,18 @@ export default {
       } catch (e) {
         throw e;
       }
+    },
+
+    async getWatchlists(state){
+      try{
+        let watchlist = await util.post('/robinhood/getWatchlists');
+
+        state.commit('setWatchlists', watchlist.result.results);
+
+        return;
+      }catch(e){
+        throw e;
+      }
     }
   },
 
@@ -377,7 +390,7 @@ export default {
         return r.url == resource.url;
       });
 
-      if (typeof existingResource !== 'undefined') {
+      if (existingResource !== -1) {
         state.resources.splice(existingResource, 1);
       }
 
@@ -437,6 +450,10 @@ export default {
 
     setSearchResults: (state, results) => {
       state.searchResults = results;
+    },
+
+    setWatchlists: (state, watchlists) => {
+      state.watchlists = watchlists;
     }
   },
 
@@ -549,6 +566,8 @@ export default {
 
     searchResults: (state) => {
       return state.searchResults;
-    }
+    },
+
+    watchlists: (state) => state.watchlists
   }
 }

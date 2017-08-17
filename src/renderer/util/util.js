@@ -20,6 +20,7 @@ export default {
         if('err' in arg && arg.err != null){
           return reject(arg.err.toString());
         }else{
+          console.log("Got response for " + url, arg);
           return resolve(arg);
         }
       });
