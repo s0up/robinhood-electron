@@ -301,3 +301,18 @@ h3 {
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
   background-color: #222428;
 }
+.stock-info-buttons {
+  margin-bottom: 15px !important;
+  /*margin-left: 15px;*/
+  /*margin-right: 20px;*/
+
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+  background-color: #222428;
+  color: #fff;
+}
+.nav > li > a:hover, .nav > li > a:focus {
+  background-color: #121418;
+  border: 1px solid #fff;
+}

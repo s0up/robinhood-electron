@@ -40,7 +40,7 @@
     <h3>Stock Information</h3>
 
     <div class='stock-extra-info'>
-      <ul class="nav nav-tabs nav-justified">
+      <ul class="nav nav-pills nav-justified">
         <li role="presentation" v-bind:class="{'active': activeTab == 'price'}" @click="activeTab = 'price'"><a>Price</a></li>
         <li role="presentation" v-bind:class="{'active': activeTab == 'companyInfo'}" @click="activeTab = 'companyInfo'"><a>Company Information</a></li>
       </ul>
@@ -84,75 +84,44 @@ year_founded:1886
 -->
       <div v-if="activeTab == 'price'">
         <div class="clear">&nbsp;</div>
-        <div class="row">
-          <div class="form-inline">
-            <div class="input-group col-sm-3">
-              <div class="input-group-addon">Last Trade Price</div>
-              <input type="text" class="form-control"  v-bind:value="formatMoney(quote.last_trade_price)" readonly>
-            </div>
-            <div class="input-group col-sm-3">
-              <div class="input-group-addon">Last Trade Price</div>
-              <input type="text" class="form-control"  value="$77.77" readonly>
-            </div>
-            <div class="input-group col-sm-3">
-              <div class="input-group-addon">Last Trade Price</div>
-              <input type="text" class="form-control"  value="$77.77" readonly>
-            </div>
+        <div class="row stock-info-buttons">
+          <div class="col-sm-3">
+              <div class="input-group ">
+                <div class="input-group-addon">Last Trade Price</div>
+                <input type="text" class="form-control"  v-bind:value="formatMoney(quote.last_trade_price)" readonly>
+              </div>
+          </div>
+          <div class="col-sm-3">
+              <div class="input-group">
+                <div class="input-group-addon">Ask Price</div>
+                <input type="text" class="form-control"  v-bind:value="formatMoney(quote.ask_price)" readonly>
+              </div>
+          </div>
+          <div class="col-sm-3">
+              <div class="input-group">
+                <div class="input-group-addon">Bid Price</div>
+                <input type="text" class="form-control"  v-bind:value="formatMoney(quote.bid_price)" readonly>
+              </div>
+          </div>
+          <div class="col-sm-3">
+              <div class="input-group">
+                <div class="input-group-addon">Prev Close Price</div>
+                <input type="text" class="form-control"  v-bind:value="formatMoney(quote.previous_close)" readonly>
+              </div>
           </div>
         </div>
         <div class="row">
-          <div class="col-md-3">
-            <div class="panel panel-default ">
-              <div class="panel-heading">Last Trade Price</div>
-              <div class="panel-body">
-                <h3 v-money="quote.last_trade_price"></h3>
+          <div class="col-sm-3">
+              <div class="input-group">
+                <div class="input-group-addon">All-Time High</div>
+                <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.high)" readonly>
               </div>
-            </div>
           </div>
-
-          <div class="col-md-3">
-            <div class="panel panel-default ">
-              <div class="panel-heading">Ask Price</div>
-              <div class="panel-body">
-                <h3 v-money="quote.ask_price"></h3>
+          <div class="col-sm-3">
+              <div class="input-group">
+                <div class="input-group-addon">Dividend Yield</div>
+                <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.dividend_yield)" readonly>
               </div>
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <div class="panel panel-default ">
-              <div class="panel-heading">Bid Price</div>
-              <div class="panel-body">
-                <h3 v-money="quote.bid_price"></h3>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-3">
-            <div class="panel panel-default ">
-              <div class="panel-heading">Previous Close Price</div>
-              <div class="panel-body">
-                <h3 v-money="quote.previous_close"></h3>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-3">
-            <div class="panel panel-default ">
-              <div class="panel-heading">All-Time High</div>
-              <div class="panel-body">
-                <h3 v-money="fundamentals.high"></h3>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="panel panel-default ">
-              <div class="panel-heading">Dividend Yield</div>
-              <div class="panel-body">
-                <h3 v-money="fundamentals.dividend_yield"></h3>
-              </div>
-            </div>
           </div>
         </div>
       </div>
