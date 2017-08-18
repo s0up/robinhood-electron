@@ -38,6 +38,7 @@
     </div>
     <hr>
     <h3>Stock Information</h3>
+
     <div class='stock-extra-info'>
       <ul class="nav nav-tabs nav-justified">
         <li role="presentation" v-bind:class="{'active': activeTab == 'price'}" @click="activeTab = 'price'"><a>Price</a></li>
@@ -83,6 +84,23 @@ year_founded:1886
 -->
       <div v-if="activeTab == 'price'">
         <div class="clear">&nbsp;</div>
+        <!-- work for later clean up this stuff -->
+        <!-- <div class="row">
+          <div class="form-inline">
+            <div class="input-group col-sm-3">
+              <div class="input-group-addon">Last Trade Price</div>
+              <input type="text" class="form-control"  value="$77.77" readonly>
+            </div>
+            <div class="input-group col-sm-3">
+              <div class="input-group-addon">Last Trade Price</div>
+              <input type="text" class="form-control"  value="$77.77" readonly>
+            </div>
+            <div class="input-group col-sm-3">
+              <div class="input-group-addon">Last Trade Price</div>
+              <input type="text" class="form-control"  value="$77.77" readonly>
+            </div>
+          </div>
+        </div> -->
         <div class="row">
           <div class="col-md-3">
             <div class="panel panel-default ">
