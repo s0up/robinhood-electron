@@ -84,12 +84,11 @@ year_founded:1886
 -->
       <div v-if="activeTab == 'price'">
         <div class="clear">&nbsp;</div>
-        <!-- work for later clean up this stuff -->
-        <!-- <div class="row">
+        <div class="row">
           <div class="form-inline">
             <div class="input-group col-sm-3">
               <div class="input-group-addon">Last Trade Price</div>
-              <input type="text" class="form-control"  value="$77.77" readonly>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(quote.last_trade_price)" readonly>
             </div>
             <div class="input-group col-sm-3">
               <div class="input-group-addon">Last Trade Price</div>
@@ -100,7 +99,7 @@ year_founded:1886
               <input type="text" class="form-control"  value="$77.77" readonly>
             </div>
           </div>
-        </div> -->
+        </div>
         <div class="row">
           <div class="col-md-3">
             <div class="panel panel-default ">
@@ -199,6 +198,7 @@ import TickerLink from '@/components/Common/TickerLink';
 
 import moment from 'moment';
 import state from '@/state';
+import util from '@/util/util';
 
 export default {
   created() {
@@ -333,6 +333,9 @@ export default {
     },
     orderComplete() {
       setTimeout(() => this.isBuying = false, 5000);
+    },
+    formatMoney(money){
+      return util.formatMoney(money);
     },
     async updateData() {
       await state.dispatch('robinhood/getTickerHistoricals', this.currentHistoricalView);
