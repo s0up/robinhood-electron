@@ -15,9 +15,27 @@
 </template>
 <script>
 import state from '@/state';
+import util from '@/util/util';
 
 export default {
   name: 'login-page',
+  async created(){
+    try{
+      let creds = await util.storage('get', [
+        'loginCredentials'
+      ]);
+
+      if(creds && Object.keys(creds).length > 0){
+        this.username = creds.username;
+        this.password = creds.password;
+
+        console.log("CREDS", creds, Object.is(creds, {}));
+        this.login();
+      }
+    }catch(e){
+      console.log("Storage error", e);
+    }
+  },
   data() {
     return {
       username: null,

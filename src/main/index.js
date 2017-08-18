@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
+import {storage} from 'electron-json-storage'
 
 import IPCHandler from './services/IPCHandler';
 import UpdateChecker from './services/UpdateChecker';

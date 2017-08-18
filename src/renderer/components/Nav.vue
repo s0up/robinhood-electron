@@ -25,6 +25,7 @@
           <li><router-link to="/positions" class="nav-link">Positions</router-link></li>
           <li><router-link to="/recent-orders" class="nav-link">Orders</router-link></li>
           <li><router-link :to="{name: 'banking'}" class="nav-link">Transfers</router-link></li>
+          <li><a @click="logout">Logout</a></li>
         </ul>
       </div>
     </div>

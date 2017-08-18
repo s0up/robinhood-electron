@@ -1,5 +1,7 @@
 /*Route ipc requests to the robinhood api*/
 import { app, BrowserWindow, ipcMain } from 'electron'
+const storage = require('electron-json-storage');
+
 import _ from 'lodash';
 import RobinHood from './RobinHood';
 let rh = new RobinHood();
@@ -10,6 +12,14 @@ This is just to replace the API / router of the web version of this app.  Robinh
 
 export default {
   start() {
+    ipcMain.on('storage', function(event, arg){
+      arg.payload.push(function(err, result){
+        event.sender.send(arg['requestId'], {err: err, result: result});
+      });
+
+      storage[arg['action']].apply(this, arg['payload']);
+    });
+
     ipcMain.on('post', async function(event, arg){
       let requestId = _.clone(arg.requestId);
       delete arg['requestId'];
@@ -20,6 +30,11 @@ export default {
             let loginResult = await rh.connect(arg.username, arg.password);
             event.sender.send(requestId, {err: null, result: loginResult, userData: {robinhood_username: "My Account"}});
             return;
+          }
+
+          if(arg.url == '/user/logout'){
+            rh.api.token = null;
+            event.sender.send(requestId, {err: null, result: 'SUCCESS'});
           }
 
           if(arg.url == '/user/checkLoginState'){

@@ -4,8 +4,9 @@
   "version": "0.5.2",
   "author": "s0up",
   "description": "by s0up",
-  "license": null,
+  "license": "ISC",
   "main": "./dist/electron/main.js",
+  "repository": "git@github.com:s0up/robinhood-electron.git",
   "scripts": {
     "build": "node .electron-vue/build.js",
     "build:darwin": "cross-env BUILD_TARGET=darwin node .electron-vue/build.js",
@@ -26,6 +27,7 @@
     "bootstrap-vue": "^0.22.1",
     "chart.js": "^2.6.0",
     "compare-versions": "^3.0.1",
+    "electron-json-storage": "^3.0.7",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",

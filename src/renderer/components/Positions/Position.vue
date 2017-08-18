@@ -1,7 +1,7 @@
 <template>
    <tr v-if="quote && instrument">
       <td><ticker-link :symbol="instrument.symbol"></ticker-link></td>
-      <td v-round="0" class="text-center">{{(position.quantity)}}</td>
+      <td v-round="{number: position.quantity, decimals: 0}" class="text-center"></td>
       <td v-money="position.average_buy_price"></td>
       <td v-money="quote.last_trade_price"></td>
       <td v-money="totalValue"></td>

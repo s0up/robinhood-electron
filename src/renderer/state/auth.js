@@ -37,6 +37,9 @@ export default {
     async login(state, credentials){
       try{
         let loginResult = await util.post('/user/login', {username: credentials.username, password: credentials.password});
+
+        await util.storage('set', ['loginCredentials', credentials]);
+
         state.commit('setLoginStateChecked', true);
         state.commit('setLoginState', true);
         state.commit('setUserData', loginResult.result);
@@ -54,9 +57,12 @@ export default {
     async logout(state){
       try{
         await util.post('/user/logout');
+        await util.storage('remove', ['loginCredentials']);
 
         state.commit('setLoginState', false);
         state.commit('setLoginStateChecked', true);
+
+        location.reload(); //Reset vuex the lazy way
 
         return;
       }catch(e){

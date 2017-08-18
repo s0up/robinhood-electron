@@ -5,7 +5,7 @@ export default {
   register(Vue){
     //Format money as cash
     Vue.directive('money', {
-      inserted: function (el, binding) {
+      process: function(el, binding){
         if(isNaN(parseFloat(binding.value))){
           el.innerHTML = "N/A";
           return;
@@ -13,26 +13,33 @@ export default {
 
         el.innerHTML = util.formatMoney(binding.value);
       },
-
+      inserted: function (el, binding) {
+        Vue.directive('money').process(el, binding);
+      },
       update: function(el, binding){
-        if(isNaN(parseFloat(binding.value))){
-          el.innerHTML = "N/A";
-          return;
-        }
-
-        el.innerHTML = util.formatMoney(binding.value);
+        Vue.directive('money').process(el, binding);
       }
     });
 
     Vue.directive('round', {
-      inserted: function(el, binding){
-        if(isNaN(parseFloat(el.innerHTML))){
+      process: function(el, binding){
+        if('number' in binding.value === false || isNaN(parseFloat(binding.value.number))){
           return;
         }
 
-        binding.value = (typeof binding.value === 'undefined') ? 2 : binding.value;
+        let decimals = 2;
 
-        el.innerHTML = parseFloat(el.innerHTML).toFixed(binding.value);
+        if('decimals' in binding.value){
+          decimals = binding.value.decimals;
+        }
+
+        el.innerHTML = parseFloat(binding.value.number).toFixed(decimals);
+      },
+      inserted: function(el, binding){
+        Vue.directive('round').process(el, binding);
+      },
+      update: function(el, binding){
+        Vue.directive('round').process(el, binding);
       }
     });
 

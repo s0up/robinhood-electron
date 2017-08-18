@@ -28,5 +28,25 @@ export default {
       console.log("Sending data ", data);
       ipcRenderer.send('post', data);
     });
+  },
+
+  storage(action, payload){
+    let requestId = uuid.v4();
+
+    return new Promise(function(resolve, reject){
+      ipcRenderer.once(requestId, function(event, arg){
+        if('err' in arg && arg.err != null){
+          return reject(arg.err.toString());
+        }else{
+          return resolve(arg['result']);
+        }
+      });
+
+      ipcRenderer.send('storage', {
+        action: action,
+        payload: payload,
+        requestId: requestId
+      });
+    });
   }
 }

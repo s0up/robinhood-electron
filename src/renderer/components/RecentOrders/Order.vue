@@ -4,7 +4,7 @@
       <td v-bind:class="{'text-success': order.state == 'filled', 'text-danger': order.state == 'cancelled', 'text-info' : order.state == 'confirmed'}"><strong>{{order.state.toUpperCase()}}</strong></td>
       <td>{{order.side.toUpperCase()}}</td>
       <td>{{order.type.toUpperCase()}}</td>
-      <td v-round="0" class="text-center">{{order.quantity}}</td>
+      <td v-round="{number: order.quantity, decimals: 0}"></td>
       <td v-money="order.average_price"></td>
       <td>{{orderAge}}</td>
       <td>
