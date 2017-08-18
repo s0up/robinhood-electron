@@ -9,7 +9,7 @@
             <position slot="position-table-body" v-for="(position, index) in positions" :key="index" :row="position"></position>
           </position-table>
         </div>
-         <nav aria-label="Page navigation example">
+         <nav v-if="previousPosition || nextPosition" aria-label="Page navigation">
            <ul class="pagination">
              <li v-if="previousPosition != null" @click="previousPage" class="page-item"><a class="page-link">Previous</a></li>
              <li v-if="nextPosition != null" @click="nextPage" class="page-item"><a class="page-link">Next</a></li>

@@ -30,28 +30,132 @@
       <line-chart :chart-data="lineGraphData" :options="chartOptions"></line-chart>
     </div>
     <div v-if="currentPosition" class="table-responsive">
-      <div class='clear'>&nbsp;</div>
+      <hr>
       <h3>Current Position</h3>
       <position-table>
         <position slot="position-table-body" :row="currentPosition"></position>
       </position-table>
     </div>
-    <!--
-    FINISH THIS SOON!
+    <hr>
+    <h3>Stock Information</h3>
     <div class='stock-extra-info'>
-      <div class='row'>
-        <div class='col-sm-4'>
-          <h4 class='text-success'>Last Trade Price</h4>
-          {{quote.last_trade_price}}
+      <ul class="nav nav-tabs nav-justified">
+        <li role="presentation" v-bind:class="{'active': activeTab == 'price'}" @click="activeTab = 'price'"><a>Price</a></li>
+        <li role="presentation" v-bind:class="{'active': activeTab == 'companyInfo'}" @click="activeTab = 'companyInfo'"><a>Company Information</a></li>
+      </ul>
+      <!--Price info begin-->
+      <!--
+      adjusted_previous_close:"72.4000"
+ask_price:"72.7000"
+ask_size:1300
+bid_price:"72.6900"
+bid_size:1500
+has_traded:true
+instrument:"https://api.robinhood.com/instruments/50810c35-d215-4866-9758-0ada4ac79ffa/"
+instruments:Array[1]
+last_extended_hours_trade_price:null
+last_trade_price:"72.6750"
+last_trade_price_source:"nls"
+previous_close:"72.4000"
+previous_close_date:"2017-08-17"
+symbol:"MSFT"
+trading_halted:false
+updated_at:"2017-08-18T19:19:05Z"
+
+fundamentalsaverage_volume:"6399407.0996"
+ceo:"Alex Gorsky"
+description:"Johnson & Johnson is an investment holding company with interests in health care products. It engages in research and development, manufacture and sale of personal care hygienic products, pharmaceuticals and surgical equipment. The company operates through the following business segments: Consumer, Pharmaceutical and Medical Devices. The Consumer segment includes products used in the baby care, skin care, oral care, wound care and women's health care fields, as well as nutritional and over-the-counter pharmaceutical products, and wellness and prevention platforms. Its baby care franchise includes the JOHNSON'S Baby line of products. The Pharmaceutical segment includes products in the anti-infective, antipsychotic, contraceptive, gastrointestinal, hematology, immunology, infectious diseases, neurology, oncology, pain management, thrombosis and vaccines. The Medical Devices segment includes products distributed to wholesalers, hospitals and retailers, used principally in the professional fields by physicians, nurses, hospitals, and clinics. It include products to treat cardiovascular disease; orthopaedic and neurological products; blood glucose monitoring and insulin delivery products; general surgery, biosurgical, and energy products; professional diagnostic products; infection prevention products; and disposable contact lenses. Johnson & Johnson was founded by Robert Wood Johnson I, James Wood Johnson and Edward Mead Johnson Sr. in 1886 and is headquartered in New Brunswick, NJ."
+dividend_yield:"2.7341"
+headquarters_city:"New Brunswick"
+headquarters_state:"New Jersey"
+high:"133.7800"
+high_52_weeks:"137.0800"
+instrument:"https://api.robinhood.com/instruments/fd0c2695-e591-4c28-bdf7-068895ae3b14/"
+low:"132.3810"
+low_52_weeks:"109.3200"
+market_cap:"357237677600.0000"
+num_employees:126400
+open:"132.3810"
+pe_ratio:"22.4206"
+url:"https://api.robinhood.com/fundamentals/JNJ/"
+volume:"1062012.0000"
+year_founded:1886
+-->
+      <div v-if="activeTab == 'price'">
+        <div class="clear">&nbsp;</div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="panel panel-default ">
+              <div class="panel-heading">Last Trade Price</div>
+              <div class="panel-body">
+                <h3 v-money="quote.last_trade_price"></h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="panel panel-default ">
+              <div class="panel-heading">Ask Price</div>
+              <div class="panel-body">
+                <h3 v-money="quote.ask_price"></h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="panel panel-default ">
+              <div class="panel-heading">Bid Price</div>
+              <div class="panel-body">
+                <h3 v-money="quote.bid_price"></h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="panel panel-default ">
+              <div class="panel-heading">Previous Close Price</div>
+              <div class="panel-body">
+                <h3 v-money="quote.previous_close"></h3>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class='col-sm-4'>
-          Latest Price: {{quote.last_trade_price}}
+        <div class="row">
+          <div class="col-md-3">
+            <div class="panel panel-default ">
+              <div class="panel-heading">All-Time High</div>
+              <div class="panel-body">
+                <h3 v-money="fundamentals.high"></h3>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="panel panel-default ">
+              <div class="panel-heading">Dividend Yield</div>
+              <div class="panel-body">
+                <h3 v-money="fundamentals.dividend_yield"></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Price info end -->
+      <div v-if="activeTab == 'companyInfo'">
+        <div class="clear">&nbsp;</div>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="panel panel-default ">
+              <div class="panel-heading">CEO</div>
+              <div class="panel-body">
+                <h3>{{fundamentals.ceo}}</h3>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    -->
     <div v-if="hasNews" class="table-responsive">
-      <div class='clear'>&nbsp;</div>
+      <hr>
       <h3 v-if="quote">Recent news for {{instrument.name}}</h3>
       <table class="table table-condensed">
         <thead>
@@ -90,10 +194,7 @@ export default {
       }
     })();
 
-    this.updateCharts();
-
-    state.dispatch('robinhood/getNews', this.symbol);
-    state.dispatch('robinhood/getPositions');
+    this.updateData();
   },
   data() {
     return {
@@ -103,13 +204,14 @@ export default {
       buySide: 'buy',
       quoteError: false,
       chartOptions: null,
-      chartTimer: setTimeout(function() {}, 0),
+      updateTimer: setTimeout(function() {}, 0),
       historicalInterval: '5minute',
-      historicalSpan: 'day'
+      historicalSpan: 'day',
+      activeTab: 'price'
     }
   },
   beforeDestroy() {
-    clearTimeout(this.chartTimer);
+    clearTimeout(this.updateTimer);
   },
   computed: {
     symbol() {
@@ -214,12 +316,16 @@ export default {
     orderComplete() {
       setTimeout(() => this.isBuying = false, 5000);
     },
-    async updateCharts() {
+    async updateData() {
       await state.dispatch('robinhood/getTickerHistoricals', this.currentHistoricalView);
 
+      await state.dispatch('robinhood/getNews', this.symbol);
+      await state.dispatch('robinhood/getPositions');
+      await state.dispatch('robinhood/getQuote', this.symbol);
+
       clearTimeout(this.chartTimer);
-      this.chartTimer = setTimeout(() => {
-        this.updateCharts()
+      this.updateTimer = setTimeout(() => {
+        this.updateData()
       }, 10000);
     },
     getLineGraphData(data) {

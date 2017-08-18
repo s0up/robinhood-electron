@@ -141,18 +141,18 @@ export default {
 
       return this.getLineGraphData(this.historicals);
     },
-    watchlists(){
+    watchlists() {
       return state.getters['robinhood/watchlists'];
     },
-    watchlistData(){
-      if(!this.currentWatchlist){
+    watchlistData() {
+      if (!this.currentWatchlist) {
         return;
       }
 
       state.getters['robinhood/resource'](this.currentWatchlist.url);
       //return state.getters['robinhood/resource'](this.currentWatchlist.url);
     },
-    cards(){
+    cards() {
       return state.getters['robinhood/cards'];
     }
   },
@@ -166,8 +166,8 @@ export default {
 
       this.updateTimer = setTimeout(() => this.updateData(), 10000);
     },
-    async dismissCard(card){
-      try{
+    async dismissCard(card) {
+      try {
         let urlPieces = card.url.split('/');
 
         let cardId = urlPieces[urlPieces.length - 2];
@@ -179,7 +179,7 @@ export default {
         state.commit('setCards', cards);
 
         await state.dispatch('robinhood/dismissCard', cardId);
-      }catch(e){
+      } catch (e) {
         console.log("Card removal failed", e);
       }
     },
@@ -283,8 +283,8 @@ export default {
     }
   },
   watch: {
-    watchlists(watchlists){
-      if(!this.currentWatchlist){
+    watchlists(watchlists) {
+      if (!this.currentWatchlist) {
         this.currentWatchlist = watchlists[0];
         this.selectedWatchlist = this.currentWatchlist['url'];
       }
@@ -292,7 +292,7 @@ export default {
     graphView() {
       this.updateData();
     },
-    selectedWatchlist(url){
+    selectedWatchlist(url) {
       this.currentWatchlist = this.watchlists.find(item => item.url == url);
     }
   },
@@ -310,21 +310,25 @@ export default {
 <style>
 .nav-tabs li a {
   border-color: #fff;
-
 }
+
 .nav-tabs li.active a {
   border-color: #fff !important;
   border-bottom-color: transparent !important;
 }
+
 .panel-default {
   background-color: #222428;
   border-color: #fff;
 }
+
+
 /*.panel-default > .panel-heading {
   color: #00CC99;
   background-color: #333;
   border-color: #fff;
 }*/
+
 .small {
   margin: 0px auto;
   background-color: #333333;
