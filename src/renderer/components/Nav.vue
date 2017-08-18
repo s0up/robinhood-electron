@@ -21,6 +21,7 @@
             </div>
         </div>
         <ul class="nav navbar-nav navbar-right">
+          <li v-if="updateAvailable"><a href="#" @click="openUpdateLink" class="nav-link" style="color: #fc4d2d">(Update Available {{updateAvailable.name}})</a></li>
           <li><router-link to="/positions" class="nav-link">Positions</router-link></li>
           <li><router-link to="/recent-orders" class="nav-link">Orders</router-link></li>
           <li><router-link :to="{name: 'banking'}" class="nav-link">Transfers</router-link></li>
@@ -32,6 +33,7 @@
 <script>
 import state from '@/state';
 import _ from 'lodash';
+import {shell} from 'electron';
 
 export default {
   name: 'main-nav',
@@ -43,6 +45,9 @@ export default {
     }
   },
   methods: {
+    openUpdateLink(){
+      shell.openExternal("https://github.com/s0up/robinhood-electron/releases");
+    },
     logout: function(){
       state.dispatch('auth/logout');
     },
@@ -90,7 +95,8 @@ export default {
     account: function(){
       return state.getters['robinhood/currentAccount'];
     },
-    searchResults: () => state.getters['robinhood/searchResults']
+    searchResults: () => state.getters['robinhood/searchResults'],
+    updateAvailable: () => state.getters.updateAvailable
   },
 
   watch: {

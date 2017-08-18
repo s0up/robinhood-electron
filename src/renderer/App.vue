@@ -15,6 +15,9 @@ import state from '@/state';
 
 export default {
    name: 'app',
+   created(){
+     state.dispatch('monitorUpdates');
+   },
    components: {
       'login-page' : LoginPage,
       'layout': Layout,

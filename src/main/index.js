@@ -1,14 +1,10 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 
-//const path = require('path');
-
-//const IPCHandler = require(path.join(__dirname, '/services/IPCHandler'));
 import IPCHandler from './services/IPCHandler';
+import UpdateChecker from './services/UpdateChecker';
+
 IPCHandler.start();
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
+
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
@@ -19,9 +15,6 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
-  /**
-   * Initial window options
-   */
   mainWindow = new BrowserWindow({
     height: 720,
     useContentSize: true,
@@ -34,7 +27,9 @@ function createWindow () {
 
   mainWindow.on('closed', () => {
     mainWindow = null
-  })
+  });
+
+  UpdateChecker.start(mainWindow);
 }
 
 app.on('ready', createWindow)
