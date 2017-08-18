@@ -23,7 +23,7 @@
       <div class="panel panel-default ">
         <div class="panel-heading">Buying Power</div>
         <div class="panel-body">
-          <h3 v-money="buyingPower"></h3>
+          <h3 v-money="account.computed_buying_power"></h3>
         </div>
       </div>
     </div>
@@ -117,24 +117,6 @@ export default {
   computed: {
     account() { // Gets accountID of current user
       return state.getters['robinhood/currentAccount'];
-    },
-    buyingPower() {
-      let {
-        type,
-        cash_balances,
-        margin_balances
-      } = this.account;
-
-      if (type === "cash") {
-        return cash_balances.buying_power;
-      } else {
-        let temp = Number(margin_balances.overnight_buying_power) / Number(margin_balances.overnight_ratio);
-        if (Number(margin_balances.margin_limit) === 0) {
-          return temp;
-        } else {
-          return Math.min(temp, Number(margin_balances.unallocated_margin_cash));
-        }
-      }
     },
     robinhoodUser() { // Gets current user's Username
       return state.getters['robinhood/robinhoodUser'];

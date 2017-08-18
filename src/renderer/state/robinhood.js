@@ -191,6 +191,25 @@ export default {
       try {
         let accounts = await util.post('/robinhood/getAccounts');
 
+        accounts.result.results.forEach(function(account){
+          let {
+            type,
+            cash_balances,
+            margin_balances
+          } = account;
+
+          if (type === "cash") {
+            account.computed_buying_power = cash_balances.buying_power;
+          } else {
+            let temp = Number(margin_balances.overnight_buying_power) / Number(margin_balances.overnight_ratio);
+            if (Number(margin_balances.margin_limit) === 0) {
+              account.computed_buying_power = temp;
+            } else {
+              account.computed_buying_power =  Math.min(temp, Number(margin_balances.unallocated_margin_cash));
+            }
+          }
+        });
+
         state.commit('setAccounts', accounts.result.results);
 
         return true;

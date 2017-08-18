@@ -33,7 +33,7 @@
     "moment": "^2.18.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
-    "robinhood-api": "^1.2.1",
+    "robinhood-api": "^1.2.2",
     "tether": "^1.4.0",
     "uuid": "^3.1.0",
     "vue": "^2.4.2",

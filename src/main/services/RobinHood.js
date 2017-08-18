@@ -156,7 +156,6 @@ export default class{
     }
   }
 
-
   async getQuotes(symbols){
     try{
       return await this.api.getQuotes({symbols: symbols});

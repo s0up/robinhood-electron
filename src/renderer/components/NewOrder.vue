@@ -5,6 +5,7 @@
       <button @click="$emit('cancelOrder')" type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
       <h3>Place an Order</h3>
       <div class="form-group">
+        <label for="askPrice">Buying Power: </label> <span v-money="account.computed_buying_power"></span> |
         <label for="askPrice">Ask Price: </label> <span v-money="quote.ask_price"></span> |
         <label for="bidPrice">Bid Price: </label> <span v-money="quote.bid_price"></span> |
         <label for="tradingHalted">Trading Halted: </label> <span>{{quote.trading_halted}}</span>
@@ -104,6 +105,7 @@ export default {
   async created() {
     await state.dispatch('robinhood/getQuote', this.symbol);
     this.side = this.buySide;
+    this.price = this.quote.ask_price;
   },
   data() {
     return {
@@ -182,9 +184,6 @@ export default {
     }
   },
   watch: {
-    quote(){
-      this.price = this.quote.ask_price;
-    },
     order_error(){
       setTimeout(() => this.order_error = null, 3000);
     },
