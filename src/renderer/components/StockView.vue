@@ -37,51 +37,49 @@
       </position-table>
     </div>
     <hr>
-    <h3>Stock Information</h3>
-
     <div class='stock-extra-info'>
       <ul class="nav nav-pills nav-justified">
-        <li role="presentation" v-bind:class="{'active': activeTab == 'price'}" @click="activeTab = 'price'"><a>Price</a></li>
-        <li role="presentation" v-bind:class="{'active': activeTab == 'companyInfo'}" @click="activeTab = 'companyInfo'"><a>Company Information</a></li>
+        <li role="presentation" v-bind:class="{'active': activeTab == 'price'}" @click="activeTab = 'price'"><a>Price Information</a></li>
+        <li role="presentation" v-bind:class="{'active': activeTab == 'companyInfo'}" @click="activeTab = 'companyInfo'"><a>Company Fundamentals</a></li>
       </ul>
       <!--Price info begin-->
       <!--
-      adjusted_previous_close:"72.4000"
-ask_price:"72.7000"
-ask_size:1300
-bid_price:"72.6900"
-bid_size:1500
-has_traded:true
-instrument:"https://api.robinhood.com/instruments/50810c35-d215-4866-9758-0ada4ac79ffa/"
-instruments:Array[1]
-last_extended_hours_trade_price:null
-last_trade_price:"72.6750"
-last_trade_price_source:"nls"
-previous_close:"72.4000"
-previous_close_date:"2017-08-17"
-symbol:"MSFT"
-trading_halted:false
-updated_at:"2017-08-18T19:19:05Z"
+            adjusted_previous_close:"72.4000"
+      ask_price:"72.7000"
+      ask_size:1300
+      bid_price:"72.6900"
+      bid_size:1500
+      has_traded:true
+      instrument:"https://api.robinhood.com/instruments/50810c35-d215-4866-9758-0ada4ac79ffa/"
+      instruments:Array[1]
+      last_extended_hours_trade_price:null
+      last_trade_price:"72.6750"
+      last_trade_price_source:"nls"
+      previous_close:"72.4000"
+      previous_close_date:"2017-08-17"
+      symbol:"MSFT"
+      trading_halted:false
+      updated_at:"2017-08-18T19:19:05Z"
 
-fundamentalsaverage_volume:"6399407.0996"
-ceo:"Alex Gorsky"
-description:"Johnson & Johnson is an investment holding company with interests in health care products. It engages in research and development, manufacture and sale of personal care hygienic products, pharmaceuticals and surgical equipment. The company operates through the following business segments: Consumer, Pharmaceutical and Medical Devices. The Consumer segment includes products used in the baby care, skin care, oral care, wound care and women's health care fields, as well as nutritional and over-the-counter pharmaceutical products, and wellness and prevention platforms. Its baby care franchise includes the JOHNSON'S Baby line of products. The Pharmaceutical segment includes products in the anti-infective, antipsychotic, contraceptive, gastrointestinal, hematology, immunology, infectious diseases, neurology, oncology, pain management, thrombosis and vaccines. The Medical Devices segment includes products distributed to wholesalers, hospitals and retailers, used principally in the professional fields by physicians, nurses, hospitals, and clinics. It include products to treat cardiovascular disease; orthopaedic and neurological products; blood glucose monitoring and insulin delivery products; general surgery, biosurgical, and energy products; professional diagnostic products; infection prevention products; and disposable contact lenses. Johnson & Johnson was founded by Robert Wood Johnson I, James Wood Johnson and Edward Mead Johnson Sr. in 1886 and is headquartered in New Brunswick, NJ."
-dividend_yield:"2.7341"
-headquarters_city:"New Brunswick"
-headquarters_state:"New Jersey"
-high:"133.7800"
-high_52_weeks:"137.0800"
-instrument:"https://api.robinhood.com/instruments/fd0c2695-e591-4c28-bdf7-068895ae3b14/"
-low:"132.3810"
-low_52_weeks:"109.3200"
-market_cap:"357237677600.0000"
-num_employees:126400
-open:"132.3810"
-pe_ratio:"22.4206"
-url:"https://api.robinhood.com/fundamentals/JNJ/"
-volume:"1062012.0000"
-year_founded:1886
--->
+      fundamentalsaverage_volume:"6399407.0996"
+      ceo:"Alex Gorsky"
+      description:"Johnson & Johnson is an investment holding company with interests in health care products. It engages in research and development, manufacture and sale of personal care hygienic products, pharmaceuticals and surgical equipment. The company operates through the following business segments: Consumer, Pharmaceutical and Medical Devices. The Consumer segment includes products used in the baby care, skin care, oral care, wound care and women's health care fields, as well as nutritional and over-the-counter pharmaceutical products, and wellness and prevention platforms. Its baby care franchise includes the JOHNSON'S Baby line of products. The Pharmaceutical segment includes products in the anti-infective, antipsychotic, contraceptive, gastrointestinal, hematology, immunology, infectious diseases, neurology, oncology, pain management, thrombosis and vaccines. The Medical Devices segment includes products distributed to wholesalers, hospitals and retailers, used principally in the professional fields by physicians, nurses, hospitals, and clinics. It include products to treat cardiovascular disease; orthopaedic and neurological products; blood glucose monitoring and insulin delivery products; general surgery, biosurgical, and energy products; professional diagnostic products; infection prevention products; and disposable contact lenses. Johnson & Johnson was founded by Robert Wood Johnson I, James Wood Johnson and Edward Mead Johnson Sr. in 1886 and is headquartered in New Brunswick, NJ."
+      dividend_yield:"2.7341"
+      headquarters_city:"New Brunswick"
+      headquarters_state:"New Jersey"
+      high:"133.7800"
+      high_52_weeks:"137.0800"
+      instrument:"https://api.robinhood.com/instruments/fd0c2695-e591-4c28-bdf7-068895ae3b14/"
+      low:"132.3810"
+      low_52_weeks:"109.3200"
+      market_cap:"357237677600.0000"
+      num_employees:126400
+      open:"132.3810"
+      pe_ratio:"22.4206"
+      url:"https://api.robinhood.com/fundamentals/JNJ/"
+      volume:"1062012.0000"
+      year_founded:1886
+      -->
       <div v-if="activeTab == 'price'">
         <div class="clear">&nbsp;</div>
         <div class="row stock-info-buttons">
@@ -110,31 +108,59 @@ year_founded:1886
               </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-3">
-              <div class="input-group">
-                <div class="input-group-addon">All-Time High</div>
-                <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.high)" readonly>
-              </div>
-          </div>
-          <div class="col-sm-3">
-              <div class="input-group">
-                <div class="input-group-addon">Dividend Yield</div>
-                <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.dividend_yield)" readonly>
-              </div>
-          </div>
-        </div>
       </div>
       <!-- Price info end -->
       <div v-if="activeTab == 'companyInfo'">
         <div class="clear">&nbsp;</div>
+        <div class="row stock-info-buttons">
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">Dividend Yield</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.dividend_yield)" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">P/E Ratio</div>
+              <input type="text" class="form-control"  v-bind:value="fundamentals.pe_ratio" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">Average Volume</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.volume)" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">Market Cap</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.market_cap)" readonly>
+            </div>
+          </div>
+        </div>
         <div class="row">
-          <div class="col-md-3">
-            <div class="panel panel-default ">
-              <div class="panel-heading">CEO</div>
-              <div class="panel-body">
-                <h3>{{fundamentals.ceo}}</h3>
-              </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">All-Time High</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.high)" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">All-Time Low</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.low)" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">52 Week Low</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.low_52_weeks)" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">52 Week High</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.high_52_weeks)" readonly>
             </div>
           </div>
         </div>
