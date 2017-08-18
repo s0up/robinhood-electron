@@ -20,6 +20,7 @@ function createWindow () {
     height: 720,
     useContentSize: true,
     width: 1200,
+    minWidth: 1000,
     nodeIntegration: false,
     frame: false
   })

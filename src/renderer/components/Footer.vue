@@ -2,10 +2,13 @@
 <footer class='footer'>
   <div class='container'>
     <div class='row'>
-      <div class="col-xs-6 text-center">
+      <div class="col-xs-4 text-center">
         Account Equity: <span v-money="portfolio.equity"></span>
       </div>
-      <div class="col-xs-6 text-center">
+      <div class="col-xs-4 text-center">
+        Buying Power: <span v-money="account.computed_buying_power"></span>
+      </div>
+      <div class="col-xs-4 text-center">
         Market Close: <span v-from-now="marketClose"></span>
       </div>
     </div>
