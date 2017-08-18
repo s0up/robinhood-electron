@@ -39,7 +39,7 @@ export default {
 
       await state.dispatch('robinhood/getWatchlist', this.watchlist.url);
 
-      this.watchlist_timer = setTimeout(() => this.updateWatchlist(), 10000);
+      this.watchlist_timer = setTimeout(() => this.updateWatchlist(), 60000);
     }
   },
   beforeDestroy(){

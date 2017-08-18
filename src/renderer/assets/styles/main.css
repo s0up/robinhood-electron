@@ -6,12 +6,19 @@ body{
 }
 
 .window-top{
- -webkit-app-region: drag;
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
  background-color: #333333;
  color: #1A8066;
  width: 100%;
  padding: 10px 20px 5px 10px;
  height: 35px;
+}
+
+.window-top-btns{
+  -webkit-user-select: none;
+  -webkit-app-region: none;
+  -webkit-app-region: no-drag;
 }
 
 #content{
@@ -21,6 +28,7 @@ body{
 
 .window-top span{
   padding: 0px 10px;
+  -webkit-app-region: no-drag;
 }
 
 .form-signin {
