@@ -147,6 +147,13 @@ export default {
 
       return state.getters['robinhood/instrument'](this.quote.instrument);
     },
+    fundamentals(){
+      if(!this.instrument){
+        return;
+      }
+
+      return state.getters['robinhood/resource'](this.instrument.fundamentals);
+    },
     historical() {
       return state.getters['robinhood/tickerHistorical'](this.currentHistoricalView);
     },
@@ -195,6 +202,9 @@ export default {
     },
     currentHistoricalView(){
       this.updateCharts();
+    },
+    instrument(instrument){
+      state.dispatch('robinhood/getResource', instrument.fundamentals);
     }
   },
   methods: {
