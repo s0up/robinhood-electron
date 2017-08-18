@@ -311,8 +311,9 @@ h3 {
 .nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
   background-color: #222428;
   color: #fff;
+  border: 1px solid transparent;
 }
-.nav > li > a:hover, .nav > li > a:focus {
+.nav-pills > li > a:hover {
   background-color: #121418;
   border: 1px solid #fff;
 }
