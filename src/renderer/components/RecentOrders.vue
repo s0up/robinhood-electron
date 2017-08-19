@@ -58,7 +58,7 @@ export default {
       },
       async getRecentOrders(){
         try{
-          state.dispatch('robinhood/getRecentOrders');
+          await state.dispatch('robinhood/getRecentOrders');
         }catch(e){
           console.log("Unable to get recent orders...");
         }

@@ -122,7 +122,8 @@
           <div class="col-sm-3">
             <div class="input-group">
               <div class="input-group-addon">P/E Ratio</div>
-              <input type="text" class="form-control"  v-bind:value="fundamentals.pe_ratio" readonly>
+              <input v-if="fundamentals.pe_ratio" type="text" class="form-control"  v-bind:value="fundamentals.pe_ratio" readonly>
+              <input v-else type="text" class="form-control" v-bind:value="'N/A'" readonly>
             </div>
           </div>
           <div class="col-sm-3">
