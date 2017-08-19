@@ -56,8 +56,12 @@ export default {
       previousPage: function(){
          state.dispatch('robinhood/getRecentOrders', self.previousOrder);
       },
-      getRecentOrders(){
-        state.dispatch('robinhood/getRecentOrders');
+      async getRecentOrders(){
+        try{
+          state.dispatch('robinhood/getRecentOrders');
+        }catch(e){
+          console.log("Unable to get recent orders...");
+        }
 
         this.recentOrderTimer = setTimeout(this.getRecentOrders, 10000);
       }

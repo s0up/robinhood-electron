@@ -97,11 +97,16 @@ week / span 5year
 */
 
 export default {
-  created() { //Requests historical data from Robinhood for the following attributes
+  async created() { //Requests historical data from Robinhood for the following attributes
     this.accountNumber = this.account.account_number;
     this.updateData();
-    state.dispatch('robinhood/getWatchlists');
-    state.dispatch('robinhood/getCards');
+
+    try{
+      await state.dispatch('robinhood/getWatchlists');
+      await state.dispatch('robinhood/getCards');
+    }catch(e){
+      console.log("Error retrieving dashboard data...");
+    }
   },
   data() { //Initializes ChartOptions as null
     return {
@@ -157,12 +162,16 @@ export default {
     }
   },
   methods: {
-    updateData() {
+    async updateData() {
       clearTimeout(this.updateTimer);
 
-      state.dispatch('robinhood/getHistoricals', this.graphView);
-      state.dispatch('robinhood/getResource', this.account.portfolio);
-      state.dispatch('robinhood/getAccounts');
+      try{
+        await state.dispatch('robinhood/getHistoricals', this.graphView);
+        await state.dispatch('robinhood/getResource', this.account.portfolio);
+        await state.dispatch('robinhood/getAccounts');
+      }catch(e){
+        console.log("Unable to load dashboard data...");
+      }
 
       this.updateTimer = setTimeout(() => this.updateData(), 10000);
     },

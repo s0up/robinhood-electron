@@ -9,7 +9,8 @@
         Buying Power: <span v-money="account.computed_buying_power"></span>
       </div>
       <div class="col-xs-4 text-center">
-        Market Close: <span v-from-now="marketClose"></span>
+        <span v-if="marketClose">Market Close: <span v-from-now="marketClose"></span></span>
+        <span v-else>Market Closed</span>
       </div>
     </div>
   </div>

@@ -333,11 +333,14 @@ export default {
       return util.formatMoney(money);
     },
     async updateData() {
-      await state.dispatch('robinhood/getTickerHistoricals', this.currentHistoricalView);
-
-      await state.dispatch('robinhood/getNews', this.symbol);
-      await state.dispatch('robinhood/getPositions');
-      await state.dispatch('robinhood/getQuote', this.symbol);
+      try{
+        await state.dispatch('robinhood/getTickerHistoricals', this.currentHistoricalView);
+        await state.dispatch('robinhood/getNews', this.symbol);
+        await state.dispatch('robinhood/getPositions');
+        await state.dispatch('robinhood/getQuote', this.symbol);
+      }catch(e){
+        console.log("Unable to get stock view information...");
+      }
 
       clearTimeout(this.chartTimer);
       this.updateTimer = setTimeout(() => {

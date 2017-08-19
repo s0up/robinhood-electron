@@ -5,7 +5,7 @@
       </div>
       <div class='col-md-12'>
         <div class="table-responsive">
-          <position-table>
+          <position-table v-if="positions">
             <position slot="position-table-body" v-for="(position, index) in positions" :key="index" :row="position"></position>
           </position-table>
         </div>
@@ -61,14 +61,18 @@ export default {
      clearTimeout(this.positionTimer);
    },
    methods: {
-      getPositions(){
-        state.dispatch('robinhood/getPositions');
+      async getPositions(){
+        try{
+          await state.dispatch('robinhood/getPositions');
 
-        state.dispatch('robinhood/getHistoricals', {
-          account_number: this.account.account_number,
-          interval: '5minute',
-          span: 'day'
-        });
+          await state.dispatch('robinhood/getHistoricals', {
+            account_number: this.account.account_number,
+            interval: '5minute',
+            span: 'day'
+          });
+        }catch(e){
+          console.log("Error retrieving positions", e);
+        }
 
         this.positionTimer = setTimeout(this.getPositions, 10000);
       },
