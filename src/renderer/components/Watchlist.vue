@@ -37,7 +37,11 @@ export default {
     async updateWatchlist(){
       clearTimeout(this.watchlist_timer);
 
-      await state.dispatch('robinhood/getWatchlist', this.watchlist.url);
+      try{
+        await state.dispatch('robinhood/getWatchlist', this.watchlist.url);
+      }catch(e){
+        console.log("Failed to retrieve watchlist data...");
+      }
 
       this.watchlist_timer = setTimeout(() => this.updateWatchlist(), 60000);
     }

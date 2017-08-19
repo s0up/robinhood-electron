@@ -99,31 +99,19 @@
 </div>
 </template>
 <script>
-/*ach_relationship:"https://api.robinhood.com/ach/relationships/b02f2c52-496d-44a6-a92f-033c5641e20e/"
-amount:"50.00"
-cancel:null
-created_at:"2017-08-08T05:27:39.430834Z"
-direction:"deposit"
-early_access_amount:"50.00"
-expected_landing_date:"2017-08-14"
-fees:"0.00"
-id:"bf4fc73a-13dc-44d9-8eb6-62ed4ea87538"
-scheduled:false
-state:"pending"
-status_description:""
-updated_at:"2017-08-08T05:27:39.834116Z"
-url:"https://api.robinhoo
-*/
-
 import state from '@/state';
 
 export default {
   async created() {
-    await state.dispatch('robinhood/getAccounts');
-    await state.dispatch('robinhood/getACHRelationships');
+    try{
+      await state.dispatch('robinhood/getAccounts');
+      await state.dispatch('robinhood/getACHRelationships');
 
-    state.dispatch('robinhood/getACHTransfers');
-    state.dispatch('robinhood/getAutomaticACHTransfers');
+      await state.dispatch('robinhood/getACHTransfers');
+      await state.dispatch('robinhood/getAutomaticACHTransfers');  
+    }catch(e){
+      console.log("Error retrieving banking information...");
+    }
   },
   data() {
     return {

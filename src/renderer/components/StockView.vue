@@ -142,13 +142,13 @@
         <div class="row">
           <div class="col-sm-3">
             <div class="input-group">
-              <div class="input-group-addon">All-Time High</div>
+              <div class="input-group-addon">High</div>
               <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.high)" readonly>
             </div>
           </div>
           <div class="col-sm-3">
             <div class="input-group">
-              <div class="input-group-addon">All-Time Low</div>
+              <div class="input-group-addon">Low</div>
               <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.low)" readonly>
             </div>
           </div>
