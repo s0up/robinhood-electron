@@ -65,7 +65,7 @@ export default {
           console.log("Unable to get recent orders...");
         }
 
-        this.recentOrderTimer = setTimeout(this.getRecentOrders, 10000);
+        this.recentOrderTimer = setTimeout(() => this.getRecentOrders(), 10000);
       }
    },
    computed: {

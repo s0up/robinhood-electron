@@ -5,7 +5,6 @@
     <td v-money="quote.adjusted_previous_close"></td>
     <td v-money="quote.ask_price"></td>
     <td v-money="quote.bid_price"></td>
-    <td @click="$emit('delete')"><span aria-hidden="true">&times;</span><span class="sr-only">Delete</span></td>
   </tr>
 </template>
 <script>

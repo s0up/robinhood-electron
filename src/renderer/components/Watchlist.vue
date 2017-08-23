@@ -8,7 +8,6 @@
           <th>Previous Close Price</th>
           <th>Ask Price</th>
           <th>Bid Price</th>
-          <th>Options</th>
         </tr>
       </thead>
       <watchlist-item :data="watchlistItem" v-for="watchlistItem in watchlistData.results" :key="watchlistItem.url" v-on:delete="deleteWatchlistItem(watchlistItem)"></watchlist-item>

@@ -189,9 +189,9 @@ export default {
     },
     updatePrice(){
       if(this.side == 'buy'){
-        this.price = (this.quote.ask_price * this.quantity).toFixed(2);
+        this.price = parseFloat(this.quote.ask_price).toFixed(2);
       }else{
-        this.price = (this.quote.bid_price * this.quantity).toFixed(2);
+        this.price = parseFloat(this.quote.bid_price).toFixed(2);
       }
     }
   },
