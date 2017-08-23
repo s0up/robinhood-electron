@@ -74,9 +74,18 @@ export default {
 
     async getTickerHistoricals(state, opts){
       try{
+        let tmpOpt = Object.assign({}, opts);
+
+        if(opts.span === 'month' || opts.span === '3month'){
+          tmpOpt.span = 'year'
+        }
+
         let historicals = await util.post('/robinhood/getTickerHistoricals', {
-          opts: opts
+          opts: tmpOpt
         });
+
+        historicals.result.span = opts.span;
+        historicals.result.interval = opts.interval; //because when its '', it might come back with a default value
 
         state.commit('addTickerHistorical', historicals.result);
 

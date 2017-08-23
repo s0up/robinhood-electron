@@ -23,6 +23,8 @@
     <ul class="nav nav-tabs nav-justified">
       <li role="presentation" v-bind:class="{'active': historicalSpan == 'day'}" @click="historicalSpan = 'day'; historicalInterval = '5minute'"><a>Day</a></li>
       <li role="presentation" v-bind:class="{'active': historicalSpan == 'week'}" @click="historicalSpan = 'week'; historicalInterval = '10minute'"><a>Week</a></li>
+      <li role="presentation" v-bind:class="{'active': historicalSpan == 'month'}" @click="historicalSpan = 'month'; historicalInterval = 'day'"><a>Month</a></li>
+      <li role="presentation" v-bind:class="{'active': historicalSpan == '3month'}" @click="historicalSpan = '3month'; historicalInterval = 'day'"><a>3 Month</a></li>
       <li role="presentation" v-bind:class="{'active': historicalSpan == 'year'}" @click="historicalSpan = 'year'; historicalInterval = 'day'"><a>Year</a></li>
       <li role="presentation" v-bind:class="{'active': historicalSpan == '5year'}" @click="historicalSpan = '5year'; historicalInterval = 'week'"><a>5 Year</a></li>
     </ul>
@@ -302,7 +304,7 @@ export default {
 
         this.graphLoading = false;
       }catch(e){
-        console.log("Unable to get stock view information...");
+        console.log("Unable to get stock view information...", e);
       }
 
       this.updateTimer = setTimeout(() => {
@@ -316,22 +318,37 @@ export default {
 
       let momentFormat = "LT";
 
-      switch(this.historicalSpan){
+      switch (data.span) {
         case 'week':
           momentFormat = "MMM Do";
-        break;
+          break;
         case 'month':
+          momentFormat = "MMM Do";
+          break;
+        case '3month':
           momentFormat = "MMM Do";
         break;
         case 'year':
           momentFormat = "MMM Do";
-        break;
+          break;
         case '5year':
           momentFormat = "MMM YYYY";
-        break;
+          break;
         default:
           momentFormat = "LT";
-        break;
+          break;
+      }
+
+      if(data.span === 'month'){
+        data.historicals = data.historicals.filter(item => {
+          return (moment(new Date(item.begins_at)).isAfter(moment().subtract(1, 'month'))) ? true : false;
+        });
+      }
+
+      if(data.span === '3month'){
+        data.historicals = data.historicals.filter(item => {
+          return (moment(new Date(item.begins_at)).isAfter(moment().subtract(3, 'month'))) ? true : false;
+        });
       }
 
       data.historicals.forEach(function(item) {
@@ -341,6 +358,28 @@ export default {
 
       priceData.push(parseFloat(this.quote.last_trade_price).toFixed(2));
       priceLabelData.push(moment().format(momentFormat));
+
+      let last = 0;
+      let first = 0;
+      let afterHours = null;
+
+      if(data.span === "day"){
+        last =  Number(this.quote.last_trade_price).toFixed(2);
+        first = parseFloat(this.quote.previous_close);
+
+
+        if(this.quote.last_extended_hours_trade_price){
+          afterHours = {
+            last: Number(this.quote.last_extended_hours_trade_price).toFixed(2),
+            first: parseFloat(this.quote.previous_close)
+          }
+        }
+      }else{
+        last = data.historicals[data.historicals.length - 1].close_price;
+        first = data.historicals[0].close_price;
+      }
+
+      console.log("QUOTE EQUITY:", last - first, "AFTER HOURS:", ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
 
       this.chartOptions = {
         maintainAspectRatio: false,
