@@ -8,9 +8,10 @@
           <th>Previous Close Price</th>
           <th>Ask Price</th>
           <th>Bid Price</th>
+          <th>Options</th>
         </tr>
       </thead>
-      <watchlist-item :data="watchlistItem" v-for="watchlistItem in watchlistData.results" :key="watchlistItem.url"></watchlist-item>
+      <watchlist-item :data="watchlistItem" v-for="watchlistItem in watchlistData.results" :key="watchlistItem.url" v-on:delete="deleteWatchlistItem(watchlistItem)"></watchlist-item>
     </table>
   </div>
 </template>
@@ -44,6 +45,9 @@ export default {
       }
 
       this.watchlist_timer = setTimeout(() => this.updateWatchlist(), 60000);
+    },
+    deleteWatchlistItem(item){
+      console.log("Deletign item", item);
     }
   },
   beforeDestroy(){

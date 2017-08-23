@@ -2,12 +2,24 @@ var {ipcRenderer, remote} = require('electron');
 var uuid = require('uuid');
 
 export default {
-  formatMoney: function(amount) {
+  formatPercent: function(before, after){
+      if(isNaN(parseFloat(before)) || isNaN(parseFloat(after))){
+        return "N/A";
+      }
+
+      if(parseFloat(before) === 0 || parseFloat(after) === 0){
+        return "0%";
+      }
+
+      return (((parseFloat(after) / parseFloat(before)) * 100) - 100).toFixed(2) + "%";
+  },
+
+  formatMoney: function(amount, showPlus) {
     if(isNaN(parseFloat(amount))){
       return "N/A";
     }
 
-    return ((parseFloat(amount) < 0) ? '-' : '') + '$' + (Math.abs(parseFloat(amount)).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    return ((parseFloat(amount) < 0) ? '-' : (showPlus) ? '+' : '') + '$' + (Math.abs(parseFloat(amount)).toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","));
   },
 
   post(url, data) {

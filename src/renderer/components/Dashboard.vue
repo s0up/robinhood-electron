@@ -52,13 +52,6 @@
   <hr>
   <div v-if="currentWatchlist" class='watchlist'>
     <h3>Watchlist</h3>
-    <div class="form-group">
-      <select v-model="selectedWatchlist" class="form-control">
-        <option v-bind:value="watchlist.url" v-for="watchlist in watchlists">
-          {{watchlist.name}}
-        </option>
-      </select>
-    </div>
     <watchlist :watchlist="currentWatchlist"></watchlist>
   </div>
   <hr>
@@ -82,6 +75,7 @@
 </template>
 <script>
 import state from '@/state';
+import util from '@/util/util';
 import LineChart from '@/components/Graphs/LineChart';
 import Watchlist from '@/components/Watchlist';
 import moment from 'moment';
@@ -106,7 +100,6 @@ export default {
       graphSpan: 'day',
       accountNumber: null,
       currentWatchlist: null,
-      selectedWatchlist: "",
       graphLoading: false,
       gains: {}
     }
@@ -140,13 +133,6 @@ export default {
     },
     watchlists() {
       return state.getters['robinhood/watchlists'];
-    },
-    watchlistData() {
-      if (!this.currentWatchlist) {
-        return;
-      }
-
-      state.getters['robinhood/resource'](this.currentWatchlist.url);
     },
     cards() {
       return state.getters['robinhood/cards'];
@@ -258,7 +244,25 @@ export default {
       this.$set(this.gains, 'first', first);
       this.$set(this.gains, 'after_hours', afterHours);
 
+      let change = (last - first).toFixed(2);
+
+      let title = util.formatMoney(change, true) + ' [' + util.formatPercent(first, last) + ']';
+
+      if(afterHours){
+        let ahChange = (afterHours.last - afterHours.first).toFixed(2);
+
+        title += ' (' + util.formatMoney(ahChange, true) + ' A.H)';
+      }
+
       this.chartOptions = {
+        title: {
+          display: true,
+          text: title,
+          fontSize: 18,
+          fontColor: (change < 0) ? '#fc4d2d' : '#21ce99',
+          position: 'top',
+          padding: 20
+        },
         maintainAspectRatio: false,
         responsive: true,
         legend: {
@@ -327,14 +331,10 @@ export default {
     watchlists(watchlists) {
       if (!this.currentWatchlist) {
         this.currentWatchlist = watchlists[0];
-        this.selectedWatchlist = this.currentWatchlist['url'];
       }
     },
     graphView() {
       this.updateData();
-    },
-    selectedWatchlist(url) {
-      this.currentWatchlist = this.watchlists.find(item => item.url == url);
     }
   },
   components: {

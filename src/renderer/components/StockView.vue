@@ -290,11 +290,11 @@ export default {
     formatMoney(money){
       return util.formatMoney(money);
     },
-    async updateData() {
+    async updateData(skipLoading) {
       clearTimeout(this.updateTimer);
 
       try{
-        if(!this.historical){
+        if(!this.historical || !skipLoading){
           this.graphLoading = true;
         }
 
@@ -308,7 +308,7 @@ export default {
       }
 
       this.updateTimer = setTimeout(() => {
-        this.updateData()
+        this.updateData(true)
       }, 10000);
     },
     getLineGraphData(data) {
@@ -381,7 +381,26 @@ export default {
 
       console.log("QUOTE EQUITY:", last - first, "AFTER HOURS:", ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
 
+
+      let change = (last - first).toFixed(2);
+
+      let title = util.formatMoney(change, true) + ' [' + util.formatPercent(first, last) + ']';
+
+      if(afterHours){
+        let ahChange = (afterHours.last - afterHours.first).toFixed(2);
+
+        title += ' (' + util.formatMoney(ahChange, true) + ' A.H)';
+      }
+
       this.chartOptions = {
+        title: {
+          display: true,
+          text: title,
+          fontSize: 18,
+          fontColor: (change < 0) ? '#fc4d2d' : '#21ce99',
+          position: 'top',
+          padding: 20
+        },
         maintainAspectRatio: false,
         responsive: true,
         legend: {
