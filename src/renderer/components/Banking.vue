@@ -8,7 +8,7 @@
   <p>&nbsp;</p>
   -->
   <div class='manual-transfer' v-if="activeItem == 'manual' && !onetime_transfer_complete">
-    <p class="lead">Perform a One Time Transfer</p>
+    <p class="lead">Perform a One Time Transfer - <small>(<span v-money="currentAccount.cash_available_for_withdrawal"></span> Available for Withdrawal</small>)</p>
     <div class="form-horizontal">
       <div class="form-group">
         <div class="col-sm-2">
@@ -158,6 +158,7 @@ export default {
         this.submitting = false;
         this.onetime_transfer_complete = true;
         await state.dispatch('robinhood/getACHTransfers');
+        await state.dispatch('robinhood/getAccounts'); //Update balances
       }catch(e){
         this.submitting = false;
         this.onetime_transfer_complete = false;

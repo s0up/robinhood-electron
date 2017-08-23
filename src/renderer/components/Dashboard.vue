@@ -251,7 +251,7 @@ export default {
       if(afterHours){
         let ahChange = (afterHours.last - afterHours.first).toFixed(2);
 
-        title += ' (' + util.formatMoney(ahChange, true) + ' A.H)';
+        title += ' (' + util.formatMoney(ahChange - change, true) + ' A.H)';
       }
 
       this.chartOptions = {
