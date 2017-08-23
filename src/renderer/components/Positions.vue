@@ -62,9 +62,10 @@ export default {
    },
    methods: {
       async getPositions(){
+        clearTimeout(this.positionTimer);
+
         try{
           await state.dispatch('robinhood/getPositions');
-
           await state.dispatch('robinhood/getHistoricals', {
             account_number: this.account.account_number,
             interval: '5minute',

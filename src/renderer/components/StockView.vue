@@ -26,7 +26,10 @@
       <li role="presentation" v-bind:class="{'active': historicalSpan == 'year'}" @click="historicalSpan = 'year'; historicalInterval = 'day'"><a>Year</a></li>
       <li role="presentation" v-bind:class="{'active': historicalSpan == '5year'}" @click="historicalSpan = '5year'; historicalInterval = 'week'"><a>5 Year</a></li>
     </ul>
-    <div class="small" v-if="lineGraphData">
+    <div class="graph-loading text-center" v-if="graphLoading">
+      <img style="width: 50px; margin: 40px auto;" src="~@/assets/loading.gif"/>
+    </div>
+    <div class="small" v-if="lineGraphData && !graphLoading">
       <line-chart :chart-data="lineGraphData" :options="chartOptions"></line-chart>
     </div>
     <div v-if="currentPosition" class="table-responsive">
@@ -42,44 +45,6 @@
         <li role="presentation" v-bind:class="{'active': activeTab == 'price'}" @click="activeTab = 'price'"><a>Price Information</a></li>
         <li role="presentation" v-bind:class="{'active': activeTab == 'companyInfo'}" @click="activeTab = 'companyInfo'"><a>Company Fundamentals</a></li>
       </ul>
-      <!--Price info begin-->
-      <!--
-            adjusted_previous_close:"72.4000"
-      ask_price:"72.7000"
-      ask_size:1300
-      bid_price:"72.6900"
-      bid_size:1500
-      has_traded:true
-      instrument:"https://api.robinhood.com/instruments/50810c35-d215-4866-9758-0ada4ac79ffa/"
-      instruments:Array[1]
-      last_extended_hours_trade_price:null
-      last_trade_price:"72.6750"
-      last_trade_price_source:"nls"
-      previous_close:"72.4000"
-      previous_close_date:"2017-08-17"
-      symbol:"MSFT"
-      trading_halted:false
-      updated_at:"2017-08-18T19:19:05Z"
-
-      fundamentalsaverage_volume:"6399407.0996"
-      ceo:"Alex Gorsky"
-      description:"Johnson & Johnson is an investment holding company with interests in health care products. It engages in research and development, manufacture and sale of personal care hygienic products, pharmaceuticals and surgical equipment. The company operates through the following business segments: Consumer, Pharmaceutical and Medical Devices. The Consumer segment includes products used in the baby care, skin care, oral care, wound care and women's health care fields, as well as nutritional and over-the-counter pharmaceutical products, and wellness and prevention platforms. Its baby care franchise includes the JOHNSON'S Baby line of products. The Pharmaceutical segment includes products in the anti-infective, antipsychotic, contraceptive, gastrointestinal, hematology, immunology, infectious diseases, neurology, oncology, pain management, thrombosis and vaccines. The Medical Devices segment includes products distributed to wholesalers, hospitals and retailers, used principally in the professional fields by physicians, nurses, hospitals, and clinics. It include products to treat cardiovascular disease; orthopaedic and neurological products; blood glucose monitoring and insulin delivery products; general surgery, biosurgical, and energy products; professional diagnostic products; infection prevention products; and disposable contact lenses. Johnson & Johnson was founded by Robert Wood Johnson I, James Wood Johnson and Edward Mead Johnson Sr. in 1886 and is headquartered in New Brunswick, NJ."
-      dividend_yield:"2.7341"
-      headquarters_city:"New Brunswick"
-      headquarters_state:"New Jersey"
-      high:"133.7800"
-      high_52_weeks:"137.0800"
-      instrument:"https://api.robinhood.com/instruments/fd0c2695-e591-4c28-bdf7-068895ae3b14/"
-      low:"132.3810"
-      low_52_weeks:"109.3200"
-      market_cap:"357237677600.0000"
-      num_employees:126400
-      open:"132.3810"
-      pe_ratio:"22.4206"
-      url:"https://api.robinhood.com/fundamentals/JNJ/"
-      volume:"1062012.0000"
-      year_founded:1886
-      -->
       <div v-if="activeTab == 'price'">
         <div class="clear">&nbsp;</div>
         <div class="row stock-info-buttons">
@@ -167,7 +132,7 @@
         </div>
       </div>
     </div>
-    <div v-if="hasNews" class="table-responsive">
+    <div v-if="news" class="table-responsive">
       <hr>
       <h3 v-if="quote">Recent news for {{instrument.name}}</h3>
       <table class="table table-condensed">
@@ -203,6 +168,7 @@ export default {
     (async() => {
       try {
         await state.dispatch('robinhood/getQuote', this.symbol);
+        await state.dispatch('robinhood/getNews', this.symbol);
       } catch (e) {
         self.quoteError = true;
       }
@@ -213,7 +179,6 @@ export default {
   data() {
     return {
       loaded: false,
-      hasNews: true,
       isBuying: false,
       buySide: 'buy',
       quoteError: false,
@@ -221,7 +186,8 @@ export default {
       updateTimer: setTimeout(function() {}, 0),
       historicalInterval: '5minute',
       historicalSpan: 'day',
-      activeTab: 'price'
+      activeTab: 'price',
+      graphLoading: false
     }
   },
   beforeDestroy() {
@@ -303,24 +269,13 @@ export default {
     quote() {
       this.loaded = true;
     },
-    news(newsItem) {
-      if (typeof newsItem === 'undefined') {
-        this.hasNews = false;
-
-        return;
-      }
-
-      if ('results' in newsItem && newsItem.results.length > 0) {
-        this.hasNews = true;
-      } else {
-        this.hasNews = false;
-      }
-    },
     currentHistoricalView(){
-      this.updateCharts();
+      this.updateData();
     },
     instrument(instrument){
-      state.dispatch('robinhood/getResource', instrument.fundamentals);
+      if(!this.fundamentals){
+        state.dispatch('robinhood/getResource', instrument.fundamentals);
+      }
     }
   },
   methods: {
@@ -334,16 +289,22 @@ export default {
       return util.formatMoney(money);
     },
     async updateData() {
+      clearTimeout(this.updateTimer);
+
       try{
+        if(!this.historical){
+          this.graphLoading = true;
+        }
+
         await state.dispatch('robinhood/getTickerHistoricals', this.currentHistoricalView);
-        await state.dispatch('robinhood/getNews', this.symbol);
         await state.dispatch('robinhood/getPositions');
         await state.dispatch('robinhood/getQuote', this.symbol);
+
+        this.graphLoading = false;
       }catch(e){
         console.log("Unable to get stock view information...");
       }
 
-      clearTimeout(this.chartTimer);
       this.updateTimer = setTimeout(() => {
         this.updateData()
       }, 10000);

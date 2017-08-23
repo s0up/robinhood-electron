@@ -22,6 +22,7 @@
         </div>
         <ul class="nav navbar-nav navbar-right">
           <li v-if="updateAvailable"><a href="#" @click="openUpdateLink" class="nav-link" style="color: #fc4d2d">(Update Available {{updateAvailable.name}})</a></li>
+          <li><router-link to="/dashboard" class="nav-link">Dashboard</router-link></li>
           <li><router-link to="/positions" class="nav-link">Positions</router-link></li>
           <li><router-link to="/recent-orders" class="nav-link">Orders</router-link></li>
           <li><router-link :to="{name: 'banking'}" class="nav-link">Transfers</router-link></li>
@@ -70,8 +71,6 @@ export default {
       }
 
       let ticker = this.ticker_search.toUpperCase();
-
-      //this.ticker_search = "";
 
       try{
         await state.dispatch('robinhood/search', ticker);

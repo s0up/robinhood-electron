@@ -1,10 +1,12 @@
 <template>
 <div class='banking container-fluid'>
+  <!--
   <ul class="nav nav-tabs nav-justified">
     <li role="presentation" v-bind:class="{'active': activeItem == 'manual'}" @click="activeItem = 'manual'"><a>Manual Transfers</a></li>
     <li role="presentation" v-bind:class="{'active': activeItem == 'automatic'}" @click="activeItem = 'automatic'"><a>Automatic Transfers</a></li>
   </ul>
   <p>&nbsp;</p>
+  -->
   <div class='manual-transfer' v-if="activeItem == 'manual' && !onetime_transfer_complete">
     <p class="lead">Perform a One Time Transfer</p>
     <div class="form-horizontal">
@@ -108,7 +110,7 @@ export default {
       await state.dispatch('robinhood/getACHRelationships');
 
       await state.dispatch('robinhood/getACHTransfers');
-      await state.dispatch('robinhood/getAutomaticACHTransfers');  
+      await state.dispatch('robinhood/getAutomaticACHTransfers');
     }catch(e){
       console.log("Error retrieving banking information...");
     }

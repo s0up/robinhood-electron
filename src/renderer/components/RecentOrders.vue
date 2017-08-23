@@ -43,7 +43,7 @@ export default {
    },
    data(){
      return {
-       recentOrderTimer: null
+       recentOrderTimer: setTimeout(function(){}, 0)
      }
    },
    beforeDestroy(){
@@ -57,6 +57,8 @@ export default {
          state.dispatch('robinhood/getRecentOrders', self.previousOrder);
       },
       async getRecentOrders(){
+        clearTimeout(this.recentOrderTimer);
+
         try{
           await state.dispatch('robinhood/getRecentOrders');
         }catch(e){

@@ -9,7 +9,6 @@
         </div>
       </div>
     </div>
-
     <div class="col-md-3">
       <div class="panel panel-default ">
         <div class="panel-heading">Today's Gains/Losses</div>
@@ -18,7 +17,6 @@
         </div>
       </div>
     </div>
-
     <div class="col-md-3">
       <div class="panel panel-default ">
         <div class="panel-heading">Buying Power</div>
@@ -27,7 +25,6 @@
         </div>
       </div>
     </div>
-
     <div class="col-md-3">
       <div class="panel panel-default ">
         <div class="panel-heading">Uncleared Deposits</div>
@@ -36,16 +33,17 @@
         </div>
       </div>
     </div>
-
   </div>
-
   <ul class="nav nav-tabs nav-justified">
     <li role="presentation" v-bind:class="{'active': graphSpan == 'day'}" @click="graphSpan = 'day'; graphInterval = '5minute'"><a>Day</a></li>
     <li role="presentation" v-bind:class="{'active': graphSpan == 'week'}" @click="graphSpan = 'week'; graphInterval = '10minute'"><a>Week</a></li>
     <li role="presentation" v-bind:class="{'active': graphSpan == 'year'}" @click="graphSpan = 'year'; graphInterval = 'day'"><a>Year</a></li>
     <li role="presentation" v-bind:class="{'active': graphSpan == '5year'}" @click="graphSpan = '5year'; graphInterval = 'week'"><a>5 Year</a></li>
   </ul>
-  <div class="small" v-if="graphData">
+  <div class="graph-loading text-center" v-if="graphLoading">
+    <img style="width: 50px; margin: 40px auto;" src="~@/assets/loading.gif"/>
+  </div>
+  <div class="small" v-if="graphData && !graphLoading">
     <line-chart :chart-data="graphData" :options="chartOptions"></line-chart>
   </div>
   <hr>
@@ -85,26 +83,15 @@ import LineChart from '@/components/Graphs/LineChart';
 import Watchlist from '@/components/Watchlist';
 import moment from 'moment';
 
-/*
-# get_history :AAPL, "5minute", {span: "day"}
-# get_history :AAPL, "10minute", {span: "week"}
-# get_history :AAPL, "day", {span: "year"}
-# get_history :AAPL, "week", {span: "5year"}
-5minute / span day
-10minute / span week
-day / span year
-week / span 5year
-*/
-
 export default {
   async created() { //Requests historical data from Robinhood for the following attributes
     this.accountNumber = this.account.account_number;
     this.updateData();
 
-    try{
+    try {
       await state.dispatch('robinhood/getWatchlists');
       await state.dispatch('robinhood/getCards');
-    }catch(e){
+    } catch (e) {
       console.log("Error retrieving dashboard data...");
     }
   },
@@ -116,17 +103,18 @@ export default {
       graphSpan: 'day',
       accountNumber: null,
       currentWatchlist: null,
-      selectedWatchlist: ""
+      selectedWatchlist: "",
+      graphLoading: false
     }
   },
   computed: {
-    account() { // Gets accountID of current user
+    account() {
       return state.getters['robinhood/currentAccount'];
     },
-    robinhoodUser() { // Gets current user's Username
+    robinhoodUser() {
       return state.getters['robinhood/robinhoodUser'];
     },
-    portfolio() { //Gets current user's portfolio
+    portfolio() {
       return state.getters['robinhood/resource'](this.account.portfolio);
     },
     graphView() {
@@ -155,7 +143,6 @@ export default {
       }
 
       state.getters['robinhood/resource'](this.currentWatchlist.url);
-      //return state.getters['robinhood/resource'](this.currentWatchlist.url);
     },
     cards() {
       return state.getters['robinhood/cards'];
@@ -165,11 +152,16 @@ export default {
     async updateData() {
       clearTimeout(this.updateTimer);
 
-      try{
+      try {
+        if (!this.historicals) {
+          this.graphLoading = true;
+        }
+
         await state.dispatch('robinhood/getHistoricals', this.graphView);
         await state.dispatch('robinhood/getResource', this.account.portfolio);
         await state.dispatch('robinhood/getAccounts');
-      }catch(e){
+        this.graphLoading = false;
+      } catch (e) {
         console.log("Unable to load dashboard data...");
       }
 
@@ -178,9 +170,7 @@ export default {
     async dismissCard(card) {
       try {
         let urlPieces = card.url.split('/');
-
         let cardId = urlPieces[urlPieces.length - 2];
-
         let cards = state.getters['robinhood/cards'];
 
         cards.splice(cards.findIndex(item => item.url == card.url), 1);
@@ -196,7 +186,6 @@ export default {
       let lineGraphData = [];
       let priceData = [];
       let priceLabelData = [];
-
       let momentFormat = "LT";
 
       switch (data.span) {
@@ -221,9 +210,6 @@ export default {
         priceData.push(parseFloat(item.adjusted_close_equity).toFixed(2));
         priceLabelData.push(moment(new Date(item.begins_at)).format(momentFormat));
       });
-
-      //priceData.push(parseFloat(this.quote.last_trade_price).toFixed(2));
-      //priceLabelData.push(moment().format(momentFormat));
 
       this.chartOptions = {
         maintainAspectRatio: false,
@@ -284,7 +270,6 @@ export default {
         data: priceData
       });
 
-
       return {
         labels: priceLabelData,
         datasets: lineGraphData
@@ -315,7 +300,6 @@ export default {
 }
 </script>
 
-
 <style>
 .nav-tabs li a {
   border-color: #fff;
@@ -330,14 +314,6 @@ export default {
   background-color: #222428;
   border-color: #fff;
 }
-
-
-
-/*.panel-default > .panel-heading {
-  color: #00CC99;
-  background-color: #333;
-  border-color: #fff;
-}*/
 
 .small {
   margin: 0px auto;

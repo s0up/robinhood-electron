@@ -8,7 +8,8 @@
         <label for="askPrice">Buying Power: </label> <span v-money="account.computed_buying_power"></span> |
         <label for="askPrice">Ask Price: </label> <span v-money="quote.ask_price"></span> |
         <label for="bidPrice">Bid Price: </label> <span v-money="quote.bid_price"></span> |
-        <label for="tradingHalted">Trading Halted: </label> <span>{{quote.trading_halted}}</span>
+        <label for="tradingHalted">Trading Halted: </label> <span>{{quote.trading_halted}}</span> |
+        <label for="maxCanBuy">Can Afford: </label> <span>{{maxCanBuy}}</span>
       </div>
       <div class="form-group">
         <label for="buyType">Buy Type</label>
@@ -105,7 +106,8 @@ export default {
   async created() {
     await state.dispatch('robinhood/getQuote', this.symbol);
     this.side = this.buySide;
-    this.price = this.quote.ask_price;
+
+    this.updatePrice();
   },
   data() {
     return {
@@ -165,6 +167,9 @@ export default {
       }
 
       return formData;
+    },
+    maxCanBuy(){
+      return parseFloat((Math.floor(Number(this.account.computed_buying_power) / Number(this.quote.ask_price)).toFixed(0)));
     }
   },
   methods: {
@@ -181,9 +186,22 @@ export default {
         this.order_error = e.toString();
         this.submitting = false;
       }
+    },
+    updatePrice(){
+      if(this.side == 'buy'){
+        this.price = (this.quote.ask_price * this.quantity).toFixed(2);
+      }else{
+        this.price = (this.quote.bid_price * this.quantity).toFixed(2);
+      }
     }
   },
   watch: {
+    quantity(){
+      this.updatePrice();
+    },
+    side(){
+      this.updatePrice();
+    },
     order_error(){
       setTimeout(() => this.order_error = null, 3000);
     },
@@ -204,8 +222,6 @@ export default {
 
 .fade-enter,
 .fade-leave-to
-/* .fade-leave-active in <2.1.8 */
-
 {
   opacity: 0
 }
