@@ -37,8 +37,11 @@
   <ul class="nav nav-tabs nav-justified">
     <li role="presentation" v-bind:class="{'active': graphSpan == 'day'}" @click="graphSpan = 'day'; graphInterval = '5minute'"><a>Day</a></li>
     <li role="presentation" v-bind:class="{'active': graphSpan == 'week'}" @click="graphSpan = 'week'; graphInterval = '10minute'"><a>Week</a></li>
+    <li role="presentation" v-bind:class="{'active': graphSpan == 'month'}" @click="graphSpan = 'month'; graphInterval = 'day'"><a>Month</a></li>
+    <li role="presentation" v-bind:class="{'active': graphSpan == '3month'}" @click="graphSpan = '3month'; graphInterval = 'day'"><a>3 Month</a></li>
     <li role="presentation" v-bind:class="{'active': graphSpan == 'year'}" @click="graphSpan = 'year'; graphInterval = 'day'"><a>Year</a></li>
     <li role="presentation" v-bind:class="{'active': graphSpan == '5year'}" @click="graphSpan = '5year'; graphInterval = 'week'"><a>5 Year</a></li>
+    <li role="presentation" v-bind:class="{'active': graphSpan == 'all'}" @click="graphSpan = 'all'; graphInterval = ''"><a>All</a></li>
   </ul>
   <div class="graph-loading text-center" v-if="graphLoading">
     <img style="width: 50px; margin: 40px auto;" src="~@/assets/loading.gif"/>
@@ -92,7 +95,7 @@ export default {
       await state.dispatch('robinhood/getWatchlists');
       await state.dispatch('robinhood/getCards');
     } catch (e) {
-      console.log("Error retrieving dashboard data...");
+      console.log("Error retrieving dashboard data...", e);
     }
   },
   data() { //Initializes ChartOptions as null
@@ -104,7 +107,8 @@ export default {
       accountNumber: null,
       currentWatchlist: null,
       selectedWatchlist: "",
-      graphLoading: false
+      graphLoading: false,
+      gains: {}
     }
   },
   computed: {
@@ -149,11 +153,11 @@ export default {
     }
   },
   methods: {
-    async updateData() {
+    async updateData(skipLoading) {
       clearTimeout(this.updateTimer);
 
       try {
-        if (!this.historicals) {
+        if (!this.historicals || !skipLoading) {
           this.graphLoading = true;
         }
 
@@ -162,10 +166,10 @@ export default {
         await state.dispatch('robinhood/getAccounts');
         this.graphLoading = false;
       } catch (e) {
-        console.log("Unable to load dashboard data...");
+        console.log("Unable to load dashboard data...", e);
       }
 
-      this.updateTimer = setTimeout(() => this.updateData(), 10000);
+      this.updateTimer = setTimeout(() => this.updateData(true), 20000);
     },
     async dismissCard(card) {
       try {
@@ -195,10 +199,16 @@ export default {
         case 'month':
           momentFormat = "MMM Do";
           break;
+        case '3month':
+          momentFormat = "MMM Do";
+        break;
         case 'year':
           momentFormat = "MMM Do";
           break;
         case '5year':
+          momentFormat = "MMM YYYY";
+          break;
+        case 'all':
           momentFormat = "MMM YYYY";
           break;
         default:
@@ -206,10 +216,47 @@ export default {
           break;
       }
 
+      if(data.span === 'month'){
+        data.equity_historicals = data.equity_historicals.filter(item => {
+          return (moment(new Date(item.begins_at)).isAfter(moment().subtract(1, 'month'))) ? true : false;
+        });
+      }
+
+      if(data.span === '3month'){
+        data.equity_historicals = data.equity_historicals.filter(item => {
+          return (moment(new Date(item.begins_at)).isAfter(moment().subtract(3, 'month'))) ? true : false;
+        });
+      }
+
       data.equity_historicals.forEach(function(item) {
         priceData.push(parseFloat(item.adjusted_close_equity).toFixed(2));
         priceLabelData.push(moment(new Date(item.begins_at)).format(momentFormat));
       });
+
+      let last = 0;
+      let first = 0;
+      let afterHours = null;
+
+      if(data.span === "day"){
+        last =  Number(this.portfolio.equity).toFixed(2);
+        first = parseFloat(this.portfolio.adjusted_equity_previous_close);
+
+        if(this.portfolio.extended_hours_equity){
+          afterHours = {
+            last: Number(this.portfolio.extended_hours_equity).toFixed(2),
+            first: parseFloat(this.portfolio.adjusted_equity_previous_close)
+          }
+        }
+      }else{
+        last = (this.portfolio.extended_hours_equity) ? Number(this.portfolio.extended_hours_equity).toFixed(2) : Number(this.portfolio.equity).toFixed(2);
+        first = data.equity_historicals[0].adjusted_open_equity || data.equity_historicals[0].close_price;
+      }
+
+      console.log("EQUITY:", last - first, "AFTER HOURS:", ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
+
+      this.$set(this.gains, 'last', last);
+      this.$set(this.gains, 'first', first);
+      this.$set(this.gains, 'after_hours', afterHours);
 
       this.chartOptions = {
         maintainAspectRatio: false,
