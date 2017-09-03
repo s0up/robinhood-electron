@@ -98,10 +98,6 @@ export default {
     },
     searchResults: () => state.getters['robinhood/searchResults'],
     updateAvailable: () => state.getters.updateAvailable
-  },
-
-  watch: {
-
   }
 };
 </script>

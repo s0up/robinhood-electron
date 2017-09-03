@@ -27,7 +27,6 @@
     "bootstrap-vue": "^0.22.1",
     "chart.js": "^2.6.0",
     "compare-versions": "^3.0.1",
-    "electron": "^1.8.0",
     "electron-json-storage": "^3.0.7",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
@@ -45,6 +44,7 @@
     "vuex": "^2.3.1"
   },
   "devDependencies": {
+    "electron": "^1.8.0",
     "babel-core": "^6.22.1",
     "babel-loader": "^7.0.0",
     "babel-plugin-transform-runtime": "^6.22.0",
