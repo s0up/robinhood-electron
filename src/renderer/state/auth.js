@@ -36,7 +36,13 @@ export default {
 
     async login(state, credentials) {
       try {
-        const loginResult = await util.post('/user/login', { username: credentials.username, password: credentials.password, mfa_code: credentials.mfa_code });
+        const loginResult = await util.post('/user/login',
+          {
+            username: credentials.username,
+            password: credentials.password,
+            mfa_code: credentials.mfa_code
+          }
+        );
 
         await util.storage('set', ['loginCredentials', credentials]);
 
