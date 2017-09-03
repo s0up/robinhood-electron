@@ -1,85 +1,87 @@
-"use strict";
+
 
 const RobinhoodAPI = require('robinhood-api');
 
-export default class{
-  constructor(){
+export default class {
+  constructor() {
     this.api = new RobinhoodAPI();
     this.context = this;
   }
 
-  async connect(username, password){
-    try{
-      if(typeof this.api.token == 'undefined' || this.api.token == null){
-        let loginResult = await this.api.login({username: username, password: password});
+  async connect(username, password, mfaCode) {
+    try {
+      if (typeof this.api.token === 'undefined' || this.api.token == null) {
+        if (mfaCode === '') {
+          await this.api.login({ username, password });
+        } else {
+          await this.api.mfaCode({ username, password, mfa_code: mfaCode });
+        }
       }
 
       return true;
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getPortfolio(accountId){
-    try{
+  async getPortfolio(accountId) {
+    try {
       return await this.api.getPortfolio(accountId);
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getHistoricals(opts){
-    try{
+  async getHistoricals(opts) {
+    try {
       return await this.api.getHistoricals(opts);
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getTickerHistoricals(opts){
-    try{
+  async getTickerHistoricals(opts) {
+    try {
       return await this.api.getTickerHistoricals(opts);
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getInstruments(opts){
-    try{
-      return await this.api.getInstruments({query: opts});
-    }catch(e){
+  async getInstruments(opts) {
+    try {
+      return await this.api.getInstruments({ query: opts });
+    } catch (e) {
       throw e;
     }
   }
 
-  async getPositions(resource){
-    try{
+  async getPositions(resource) {
+    try {
       let positionData = null;
-      let self = this;
+      const self = this;
 
-      if(typeof resource === 'undefined' || resource === null){
-        positionData = await self.api.getPositions({nonzero: true});
-      }else{
+      if (typeof resource === 'undefined' || resource === null) {
+        positionData = await self.api.getPositions({ nonzero: true });
+      } else {
         positionData = await self.api.getResource(resource);
       }
 
       positionData.quotes = [];
       positionData.instruments = [];
 
-      let promises = [];
+      const promises = [];
 
-      if(positionData.results.length > 0){
-        for(let result of positionData.results){
+      if (positionData.results.length > 0) {
+        for (const result of positionData.results) {
           promises.push((async () => {
-            let instrument = await self.api.getResource(result['instrument']);
+            const instrument = await self.api.getResource(result.instrument);
 
             positionData.instruments.push(instrument);
 
-            if('quote' in instrument){
-              positionData.quotes.push(await self.api.getResource(instrument['quote']));
+            if ('quote' in instrument) {
+              positionData.quotes.push(await self.api.getResource(instrument.quote));
             }
-
-            return;
           })());
         }
       }
@@ -87,31 +89,29 @@ export default class{
       await Promise.all(promises);
 
       return positionData;
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getRecentOrders(resource){
-    try{
+  async getRecentOrders(resource) {
+    try {
       let orderData = null;
-      let self = this;
+      const self = this;
 
-      if(typeof resource === 'undefined' || resource === null){
+      if (typeof resource === 'undefined' || resource === null) {
         orderData = await self.api.getRecentOrders();
-      }else{
+      } else {
         orderData = await self.api.getResource(resource);
       }
 
-      let promises = [];
+      const promises = [];
       orderData.instruments = [];
 
-      if(orderData.results.length > 0){
-        for(let result of orderData.results){
+      if (orderData.results.length > 0) {
+        for (const result of orderData.results) {
           promises.push((async () => {
-            orderData.instruments.push(await self.api.getResource(result['instrument']));
-
-            return;
+            orderData.instruments.push(await self.api.getResource(result.instrument));
           })());
         }
       }
@@ -119,125 +119,125 @@ export default class{
       await Promise.all(promises);
 
       return orderData;
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getQuote(symbol){
-    try{
-      let quote = await this.api.getQuote({symbol: symbol});
+  async getQuote(symbol) {
+    try {
+      const quote = await this.api.getQuote({ symbol });
 
       quote.instruments = [];
 
-      if('instrument' in quote){
-        quote.instruments.push(await this.api.getResource(quote['instrument']));
+      if ('instrument' in quote) {
+        quote.instruments.push(await this.api.getResource(quote.instrument));
       }
 
       return quote;
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getUser(){
-    try{
+  async getUser() {
+    try {
       return await this.api.getUserData();
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async placeOrder(order){
-    try{
+  async placeOrder(order) {
+    try {
       return await this.api.placeOrder(order);
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getQuotes(symbols){
-    try{
-      return await this.api.getQuotes({symbols: symbols});
-    }catch(e){
+  async getQuotes(symbols) {
+    try {
+      return await this.api.getQuotes({ symbols });
+    } catch (e) {
       throw e;
     }
   }
 
-  async getACHRelationships(){
-    try{
+  async getACHRelationships() {
+    try {
       return await this.api.getACHRelationships();
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getACHTransfers(){
-    try{
+  async getACHTransfers() {
+    try {
       return await this.api.getACHTransfer();
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getAutomaticACHTransfers(){
-    try{
+  async getAutomaticACHTransfers() {
+    try {
       return await this.api.getAutomaticACHTransfer();
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async ACHTransfer(transfer){
-    try{
+  async ACHTransfer(transfer) {
+    try {
       return await this.api.ACHTransfer(transfer);
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async automaticACHTransfer(transfer){
-    try{
+  async automaticACHTransfer(transfer) {
+    try {
       return await this.api.automaticACHTransfer(transfer);
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getAccounts(){
-    try{
+  async getAccounts() {
+    try {
       return await this.api.getAccounts();
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
 
-  async postResource(resource){
-    try{
+  async postResource(resource) {
+    try {
       return await this.api.postResource(resource);
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getResource(resource){
-    try{
+  async getResource(resource) {
+    try {
       return await this.api.getResource(resource);
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getMarkets(){
-    try{
-      let markets = await this.api.getMarkets();
-      let promises = [];
+  async getMarkets() {
+    try {
+      const markets = await this.api.getMarkets();
+      const promises = [];
 
-      for(let market of markets.results){
-        if('todays_hours' in market){
+      for (const market of markets.results) {
+        if ('todays_hours' in market) {
           promises.push((async () => {
-            market['todays_hours'] = await this.api.getResource(market.todays_hours);
+            market.todays_hours = await this.api.getResource(market.todays_hours);
           })());
         }
       }
@@ -245,30 +245,30 @@ export default class{
       await Promise.all(promises);
 
       return markets;
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getWatchlists(){
-    try{
+  async getWatchlists() {
+    try {
       return await this.api.getWatchlists();
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getWatchlist(url){
-    try{
-      let watchlist = await this.api.getResource(url);
+  async getWatchlist(url) {
+    try {
+      const watchlist = await this.api.getResource(url);
 
-      let promises = [];
-      let instruments = [];
-      let quotes = [];
+      const promises = [];
+      const instruments = [];
+      const quotes = [];
 
-      for(let item of watchlist.results){
+      for (const item of watchlist.results) {
         promises.push((async () => {
-          let instrument = await this.api.getResource(item.instrument);
+          const instrument = await this.api.getResource(item.instrument);
           instruments.push(instrument);
           quotes.push(await this.api.getResource(instrument.quote));
         })());
@@ -280,23 +280,23 @@ export default class{
       watchlist.quotes = quotes;
 
       return watchlist;
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async getCards(){
-    try{
+  async getCards() {
+    try {
       return await this.api.getCards();
-    }catch(e){
+    } catch (e) {
       throw e;
     }
   }
 
-  async dismissCard(card){
-    try{
-      return await this.api.dismissCard({id: card});
-    }catch(e){
+  async dismissCard(card) {
+    try {
+      return await this.api.dismissCard({ id: card });
+    } catch (e) {
       throw e;
     }
   }

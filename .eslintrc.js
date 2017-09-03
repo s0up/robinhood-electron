@@ -45,6 +45,7 @@ module.exports = {
     'no-undef': 0,
     'import/extensions': 0,
     'no-shadow': 0,
-    'no-nested-ternary': 0
+    'no-nested-ternary': 0,
+    'no-restricted-syntax': 0
   }
 }

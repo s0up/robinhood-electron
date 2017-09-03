@@ -3,9 +3,11 @@
   <div class="form-signin">
     <h2 class="form-signin-heading text-center">Robinhood Login</h2>
     <label for="inputEmail" class="sr-only">Username</label>
-    <input v-model="username" type="text" id="username" class="form-control" placeholder="Email" required autofocus>
+    <input v-model="username" type="email" id="username" class="form-control" placeholder="Email" required autofocus>
     <label for="inputPassword" class="sr-only">Password</label>
     <input v-model="password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+    <label for="inputMFA" class="sr-only">2-Step Auth Code: </label>
+    <input v-if="mfaEnabled" v-model="mfaCode" type="text" id="mfacode" class="form-control" placeholder="MFA Code" required>
     <div v-if="error != null" class='alert alert-danger'>{{error}}</div>
     <button v-if="pendingLogin == false" @click="login" class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <button v-if="pendingLogin == true" class="btn btn-lg btn-block">Logging In...</button>
@@ -40,8 +42,10 @@ export default {
     return {
       username: null,
       password: null,
+      mfaCode: '',
       error: null,
-      pendingLogin: false
+      pendingLogin: false,
+      mfaEnabled: false
     };
   },
   methods: {
@@ -49,12 +53,16 @@ export default {
       this.pendingLogin = true;
 
       try {
-        await state.dispatch('auth/login', { username: this.username, password: this.password });
+        await state.dispatch('auth/login', { username: this.username, password: this.password, mfa_code: this.mfaCode });
 
         return;
       } catch (e) {
         this.pendingLogin = false;
         this.error = e.toString();
+
+        if (e.toString().includes('2-step')) {
+          this.mfaEnabled = true;
+        }
       }
     }
   },
