@@ -35,34 +35,35 @@ export default {
     interval - Required: false (Valid Values: week,day,10minute,5minute)
     span - Required: false (Valid Values: day,week,year,5year,all)
     */
-    async search(state, query){
-      try{
+    async search(state, query) {
+      try {
         state.commit('setSearchResults', []);
 
-        let data = await util.post('/robinhood/getInstruments', {query: query});
+        const data = await util.post('/robinhood/getInstruments', { query });
 
         state.commit('setSearchResults', data.result.results);
 
         return;
-      }catch(e){
+      } catch (e) {
         throw e;
       }
     },
 
     async getHistoricals(state, opts) {
       try {
-        let tmpOpt = Object.assign({}, opts);
+        const tmpOpt = Object.assign({}, opts);
 
-        if(opts.span === 'month' || opts.span === '3month'){
-          tmpOpt.span = 'year'
+        if (opts.span === 'month' || opts.span === '3month') {
+          tmpOpt.span = 'year';
         }
 
-        let historicals = await util.post('/robinhood/getHistoricals', {
+        const historicals = await util.post('/robinhood/getHistoricals', {
           opts: tmpOpt
         });
 
         historicals.result.span = opts.span;
-        historicals.result.interval = opts.interval; //because when its '', it might come back with a default value
+        // because when its '', it might come back with a default value
+        historicals.result.interval = opts.interval;
 
         state.commit('addHistorical', historicals.result);
 
@@ -72,25 +73,26 @@ export default {
       }
     },
 
-    async getTickerHistoricals(state, opts){
-      try{
-        let tmpOpt = Object.assign({}, opts);
+    async getTickerHistoricals(state, opts) {
+      try {
+        const tmpOpt = Object.assign({}, opts);
 
-        if(opts.span === 'month' || opts.span === '3month'){
-          tmpOpt.span = 'year'
+        if (opts.span === 'month' || opts.span === '3month') {
+          tmpOpt.span = 'year';
         }
 
-        let historicals = await util.post('/robinhood/getTickerHistoricals', {
+        const historicals = await util.post('/robinhood/getTickerHistoricals', {
           opts: tmpOpt
         });
 
+        // because when its '', it might come back with a default value
         historicals.result.span = opts.span;
-        historicals.result.interval = opts.interval; //because when its '', it might come back with a default value
+        historicals.result.interval = opts.interval;
 
         state.commit('addTickerHistorical', historicals.result);
 
         return;
-      }catch(e){
+      } catch (e) {
         throw e;
       }
     },
@@ -103,7 +105,7 @@ export default {
           data = await util.post('/robinhood/getPositions');
         } else {
           data = await util.post('/robinhood/getPositions', {
-            resource: resource
+            resource
           });
         }
 
@@ -111,11 +113,11 @@ export default {
         state.commit('setPrevousPosition', data.result.previous);
         state.commit('setPositions', data.result.results);
 
-        data.result.instruments.forEach(function(instrument) {
+        data.result.instruments.forEach((instrument) => {
           state.commit('addInstrument', instrument);
         });
 
-        data.result.quotes.forEach(function(quote) {
+        data.result.quotes.forEach((quote) => {
           state.commit('addQuote', quote);
         });
 
@@ -131,11 +133,11 @@ export default {
 
     async getQuote(state, symbol) {
       try {
-        let quote = await util.post('/robinhood/getQuote', {
-          symbol: symbol
+        const quote = await util.post('/robinhood/getQuote', {
+          symbol
         });
 
-        quote.result.instruments.forEach(function(instrument) {
+        quote.result.instruments.forEach((instrument) => {
           state.commit('addInstrument', instrument);
         });
 
@@ -149,8 +151,8 @@ export default {
 
     async getResource(state, resource) {
       try {
-        let data = await util.post('/robinhood/getResource', {
-          resource: resource
+        const data = await util.post('/robinhood/getResource', {
+          resource
         });
 
         data.result.url = resource;
@@ -171,7 +173,7 @@ export default {
           orders = await util.post('/robinhood/getRecentOrders');
         } else {
           orders = await util.post('/robinhood/getRecentOrders', {
-            resource: resource
+            resource
           });
         }
 
@@ -179,7 +181,7 @@ export default {
         state.commit('setPreviousOrder', orders.result.previous);
         state.commit('setRecentOrders', orders.result.results);
 
-        orders.result.instruments.forEach(function(instrument) {
+        orders.result.instruments.forEach((instrument) => {
           state.commit('addInstrument', instrument);
         });
 
@@ -207,23 +209,27 @@ export default {
 
     async getAccounts(state) {
       try {
-        let accounts = await util.post('/robinhood/getAccounts');
+        const accounts = await util.post('/robinhood/getAccounts');
 
-        accounts.result.results.forEach(function(account){
-          let {
+        accounts.result.results.forEach((account) => {
+          const {
             type,
             cash_balances,
             margin_balances
           } = account;
 
-          if (type === "cash") {
+          if (type === 'cash') {
             account.computed_buying_power = cash_balances.buying_power;
           } else {
-            let temp = Number(margin_balances.overnight_buying_power) / Number(margin_balances.overnight_ratio);
+            const temp = Number(margin_balances.overnight_buying_power)
+              / Number(margin_balances.overnight_ratio);
+
             if (Number(margin_balances.margin_limit) === 0) {
               account.computed_buying_power = temp;
             } else {
-              account.computed_buying_power =  Math.min(temp, Number(margin_balances.unallocated_margin_cash));
+              account.computed_buying_power = Math.min(
+                temp, Number(margin_balances.unallocated_margin_cash)
+              );
             }
           }
         });
@@ -240,7 +246,7 @@ export default {
 
     async getUser(state) {
       try {
-        let robinhoodUser = await util.post('/robinhood/getUser');
+        const robinhoodUser = await util.post('/robinhood/getUser');
 
         state.commit('setRobinhoodUser', robinhoodUser.result);
 
@@ -254,11 +260,11 @@ export default {
 
     async getNews(state, symbol) {
       try {
-        let newsResult = await util.post('/robinhood/getResource', {
-          resource: 'https://api.robinhood.com/midlands/news/' + symbol + '/'
+        const newsResult = await util.post('/robinhood/getResource', {
+          resource: `https://api.robinhood.com/midlands/news/${symbol}/`
         });
 
-        let news = newsResult.result;
+        const news = newsResult.result;
         news.symbol = symbol;
 
         state.commit('addNews', news);
@@ -272,7 +278,7 @@ export default {
     async placeOrder(state, order) {
       try {
         await util.post('/robinhood/placeOrder', {
-          order: order
+          order
         });
 
         return;
@@ -283,7 +289,7 @@ export default {
 
     async getACHRelationships(state) {
       try {
-        let relationships = await util.post('/robinhood/getACHRelationships');
+        const relationships = await util.post('/robinhood/getACHRelationships');
 
         state.commit('setACHRelationships', relationships.result.results);
 
@@ -296,7 +302,7 @@ export default {
     async ACHTransfer(state, transfer) {
       try {
         await util.post('/robinhood/ACHTransfer', {
-          transfer: transfer
+          transfer
         });
 
         return;
@@ -307,7 +313,7 @@ export default {
 
     async getACHTransfers(state) {
       try {
-        let transfers = await util.post('/robinhood/getACHTransfers');
+        const transfers = await util.post('/robinhood/getACHTransfers');
 
         state.commit('setACHTransfers', transfers.result.results);
 
@@ -319,7 +325,7 @@ export default {
 
     async getAutomaticACHTransfers(state) {
       try {
-        let transfers = await util.post('/robinhood/getAutomaticACHTransfers');
+        const transfers = await util.post('/robinhood/getAutomaticACHTransfers');
 
         state.commit('setAutomaticACHTransfers', transfers.result.results);
 
@@ -331,7 +337,7 @@ export default {
 
     async getMarkets(state) {
       try {
-        let markets = await util.post('/robinhood/getMarkets');
+        const markets = await util.post('/robinhood/getMarkets');
 
         state.commit('setMarkets', markets.result.results);
 
@@ -341,137 +347,132 @@ export default {
       }
     },
 
-    async getWatchlists(state){
-      try{
-        let watchlist = await util.post('/robinhood/getWatchlists');
+    async getWatchlists(state) {
+      try {
+        const watchlist = await util.post('/robinhood/getWatchlists');
 
         state.commit('setWatchlists', watchlist.result.results);
 
         return;
-      }catch(e){
+      } catch (e) {
         throw e;
       }
     },
 
-    async getWatchlist(state, url){
-      try{
-        let watchlist = await util.post('/robinhood/getWatchlist', {watchlist: url});
+    async getWatchlist(state, url) {
+      try {
+        const watchlist = await util.post('/robinhood/getWatchlist', { watchlist: url });
 
         watchlist.result.url = url;
 
         state.commit('addWatchlistData', watchlist.result);
 
-        watchlist.result.instruments.forEach(function(result){
+        watchlist.result.instruments.forEach((result) => {
           state.commit('addInstrument', result);
         });
 
-        watchlist.result.quotes.forEach(function(result){
+        watchlist.result.quotes.forEach((result) => {
           state.commit('addQuote', result);
         });
 
         return watchlist;
-      }catch(e){
+      } catch (e) {
         throw e;
       }
     },
 
-    async getCards(state){
-      try{
-        let cards = await util.post('/robinhood/getCards');
+    async getCards(state) {
+      try {
+        const cards = await util.post('/robinhood/getCards');
 
         state.commit('setCards', cards.result.results);
 
         return;
-      }catch(e){
+      } catch (e) {
         throw e;
       }
     },
 
-    async dismissCard(state, card){
-      try{
-        await util.post('/robinhood/dismissCard', {id: card});
+    async dismissCard(state, card) {
+      try {
+        await util.post('/robinhood/dismissCard', { id: card });
 
         return;
-      }catch(e){
+      } catch (e) {
         throw e;
       }
     }
   },
 
   mutations: {
-    setRobinhoodUser: function(state, robinhoodUser) {
+    setRobinhoodUser(state, robinhoodUser) {
       state.robinhoodUser = robinhoodUser;
     },
 
-    setPositions: function(state, positions) {
+    setPositions(state, positions) {
       state.positions = positions;
     },
 
-    setNextPosition: function(state, position) {
+    setNextPosition(state, position) {
       state.nextPosition = position;
     },
 
-    setPrevousPosition: function(state, position) {
+    setPrevousPosition(state, position) {
       state.previousPosition = position;
     },
 
-    setQuotes: function(state, quotes) {
+    setQuotes(state, quotes) {
       state.quotes = quotes;
     },
 
-    addHistorical: function(state, historical) {
-      let existingHistorical = state.historicals.findIndex(item => {
-        return item.span == historical.span && item.interval == historical.interval;
-      });
+    addHistorical(state, historical) {
+      const existingHistorical = state.historicals.findIndex(
+        item => item.span === historical.span && item.interval === historical.interval
+      );
 
-      if (existingHistorical != -1) {
+      if (existingHistorical !== -1) {
         state.historicals.splice(existingHistorical, 1);
       }
 
       state.historicals.push(historical);
     },
 
-    addTickerHistorical: function(state, historical){
+    addTickerHistorical(state, historical) {
+      const existingHistorical = state.tickerHistoricals.findIndex(
+        item => item.symbol === historical.symbol
+          && item.interval === historical.interval
+          && item.span === historical.span
+      );
 
-      let existingHistorical = state.tickerHistoricals.findIndex(item => {
-        return item.symbol == historical.symbol && item.interval == historical.interval && item.span == historical.span;
-      });
-
-      if(existingHistorical != -1){
+      if (existingHistorical !== -1) {
         state.tickerHistoricals.splice(existingHistorical, 1);
       }
 
       state.tickerHistoricals.push(historical);
     },
 
-    addQuote: function(state, quote) {
-      let existingQuote = state.quotes.findIndex(item => {
-        return item.symbol == quote.symbol;
-      });
+    addQuote(state, quote) {
+      const existingQuote = state.quotes.findIndex(item => item.symbol === quote.symbol);
 
-      if (existingQuote != -1) {
+      if (existingQuote !== -1) {
         state.quotes.splice(existingQuote, 1);
       }
 
       state.quotes.push(quote);
     },
 
-    addInstrument: function(state, instrument) {
-      let existingInstrument = state.quotes.findIndex(item => {
-        return item.url == instrument.url;
-      });
+    addInstrument(state, instrument) {
+      const existingInstrument = state.quotes.findIndex(item => item.url === instrument.url);
 
-      if (existingInstrument != -1) {
+      if (existingInstrument !== -1) {
         state.instruments.splice(existingInstrument, 1);
       }
 
       state.instruments.push(instrument);
     },
 
-    addResource: function(state, resource) {
-      let existingResource = state.resources.findIndex(function(r) {
-        return r.url == resource.url;
-      });
+    addResource(state, resource) {
+      const existingResource = state.resources.findIndex(r => r.url === resource.url);
 
       if (existingResource !== -1) {
         state.resources.splice(existingResource, 1);
@@ -480,33 +481,32 @@ export default {
       state.resources.push(resource);
     },
 
-    setNextOrder: function(state, order) {
+    setNextOrder(state, order) {
       state.nextOrder = order;
     },
 
-    setPreviousOrder: function(state, order) {
+    setPreviousOrder(state, order) {
       state.previousOrder = order;
     },
 
-    setRecentOrders: function(state, recentOrders) {
+    setRecentOrders(state, recentOrders) {
       state.recentOrders = recentOrders;
     },
 
-    setAccount: function(state, account) {
+    setAccount(state, account) {
       state.account = account.account_number;
     },
 
-    setAccounts: function(state, accounts) {
-      if (state.account === null && accounts.length > 0)
+    setAccounts(state, accounts) {
+      if (state.account === null && accounts.length > 0) {
         state.account = accounts[0].account_number;
+      }
 
       state.accounts = accounts;
     },
 
-    addNews: function(state, news) {
-      let existingNews = state.news.find(function(i) {
-        return i.symbol == news.symbol;
-      });
+    addNews(state, news) {
+      const existingNews = state.news.find(i => i.symbol === news.symbol);
 
       if (typeof existingNews !== 'undefined') {
         return;
@@ -515,19 +515,19 @@ export default {
       state.news.push(news);
     },
 
-    setACHTransfers: function(state, ACHTransfers) {
+    setACHTransfers(state, ACHTransfers) {
       state.ACHTransfers = ACHTransfers;
     },
 
-    setAutomaticACHTransfers: function(state, automaticACHTransfers) {
+    setAutomaticACHTransfers(state, automaticACHTransfers) {
       state.automaticACHTransfers = automaticACHTransfers;
     },
 
-    setACHRelationships: function(state, ACHRelationships) {
+    setACHRelationships(state, ACHRelationships) {
       state.ACHRelationships = ACHRelationships;
     },
 
-    setMarkets: function(state, markets) {
+    setMarkets(state, markets) {
       state.markets = markets;
     },
 
@@ -544,11 +544,9 @@ export default {
     },
 
     addWatchlistData: (state, watchlistData) => {
-      let existingItem = state.watchlistData.findIndex(item => {
-        return item.url == watchlistData.url;
-      });
+      const existingItem = state.watchlistData.findIndex(item => item.url === watchlistData.url);
 
-      if(existingItem){
+      if (existingItem) {
         state.watchlistData.splice(existingItem, 1);
       }
 
@@ -557,123 +555,109 @@ export default {
   },
 
   getters: {
-    robinhoodUser: function(state) {
+    robinhoodUser(state) {
       return state.robinhoodUser;
     },
 
-    positions: function(state) {
+    positions(state) {
       return state.positions;
     },
 
-    nextPosition: function(state) {
+    nextPosition(state) {
       return state.nextPosition;
     },
 
-    previousPosition: function(state) {
+    previousPosition(state) {
       return state.previousPosition;
     },
 
-    quotes: function(state) {
+    quotes(state) {
       return state.quotes;
     },
 
-    quote: function(state) {
-      return symbol => state.quotes.find(item => {
-        return item.symbol == symbol;
-      });
+    quote(state) {
+      return symbol => state.quotes.find(item => item.symbol === symbol);
     },
 
-    instrument: function(state) {
-      return url => state.instruments.find(instrument => {
-        return instrument.url === url;
-      });
+    instrument(state) {
+      return url => state.instruments.find(instrument => instrument.url === url);
     },
 
-    resource: function(state) {
-      return url => state.resources.find(resource => {
-        return resource.url == url;
-      });
+    resource(state) {
+      return url => state.resources.find(resource => resource.url === url);
     },
 
-    nextOrder: function(state) {
+    resources(state) {
+      return state.resources;
+    },
+
+    nextOrder(state) {
       return state.nextOrder;
     },
 
-    previousOrder: function(state) {
+    previousOrder(state) {
       return state.previousOrder;
     },
 
-    recentOrders: function(state) {
+    recentOrders(state) {
       return state.recentOrders;
     },
 
-    accounts: function(state) {
+    accounts(state) {
       return state.accounts;
     },
 
-    account: function(state) {
-      return accountId => state.accounts.find(account => {
-        return account.account_number == accountId;
-      });
+    account(state) {
+      return accountId => state.accounts.find(account => account.account_number === accountId);
     },
 
-    currentAccount: function(state) {
-      return state.accounts.find(account => {
-        return account.account_number == state.account;
-      });
+    currentAccount(state) {
+      return state.accounts.find(account => account.account_number === state.account);
     },
 
-    news: function(state) {
-      return symbol => state.news.find(newsItem => {
-        return newsItem.symbol == symbol;
-      });
+    news(state) {
+      return symbol => state.news.find(newsItem => newsItem.symbol === symbol);
     },
 
-    ACHTransfers: function(state) {
+    ACHTransfers(state) {
       return state.ACHTransfers;
     },
 
-    automaticACHTransfers: function(state) {
+    automaticACHTransfers(state) {
       return state.automaticACHTransfers;
     },
 
-    ACHRelationships: function(state) {
+    ACHRelationships(state) {
       return state.ACHRelationships;
     },
 
-    markets: function(state) {
+    markets(state) {
       return state.markets;
     },
 
-    market: function(state) {
-      return acronym => state.markets.find(market => {
-        return market.acronym == acronym;
-      });
+    market(state) {
+      return acronym => state.markets.find(market => market.acronym === acronym);
     },
 
-    historical: function(state) {
-      return opts => state.historicals.find(historical => {
-        return opts.interval == historical.interval && opts.span == historical.span;
-      });
+    historical(state) {
+      return opts => state.historicals.find(
+        historical => opts.interval === historical.interval && opts.span === historical.span
+      );
     },
 
-    tickerHistorical: function(state){
-      return opts => state.tickerHistoricals.find(historical => {
-        return opts.symbol == historical.symbol && opts.interval == historical.interval && opts.span == historical.span;
-      });
+    tickerHistorical(state) {
+      return opts => state.tickerHistoricals.find(
+        historical => opts.symbol === historical.symbol
+          && opts.interval === historical.interval
+          && opts.span === historical.span
+      );
     },
 
-    searchResults: (state) => {
-      return state.searchResults;
-    },
+    searchResults: state => state.searchResults,
 
-    watchlistData: (state) => {
-      return url => state.watchlistData.find(item => {
-        return item.url == url;
-      });
-    },
+    watchlistData: state => url => state.watchlistData.find(item => item.url === url),
 
-    watchlists: (state) => state.watchlists,
-    cards: (state) => state.cards
+    watchlists: state => state.watchlists,
+    cards: state => state.cards
   }
-}
+};

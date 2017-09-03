@@ -105,14 +105,14 @@ import state from '@/state';
 
 export default {
   async created() {
-    try{
+    try {
       await state.dispatch('robinhood/getAccounts');
       await state.dispatch('robinhood/getACHRelationships');
 
       await state.dispatch('robinhood/getACHTransfers');
       await state.dispatch('robinhood/getAutomaticACHTransfers');
-    }catch(e){
-      console.log("Error retrieving banking information...");
+    } catch (e) {
+      console.log('Error retrieving banking information...');
     }
   },
   data() {
@@ -124,7 +124,7 @@ export default {
       submitting: false,
       transfer_error: null,
       onetime_transfer_complete: false,
-    }
+    };
   },
   computed: {
     ACHTransfers() {
@@ -139,27 +139,27 @@ export default {
     currentAccount() {
       return state.getters['robinhood/currentAccount'];
     },
-    ACHRelationships(){
+    ACHRelationships() {
       return state.getters['robinhood/ACHRelationships'];
     },
-    oneTimeFormData(){
+    oneTimeFormData() {
       return {
         amount: this.onetime_amount,
         direction: this.direction,
         ach_relationship: this.onetime_ach_source
-      }
+      };
     }
   },
   methods: {
-    async oneTimeTransfer(){
-      try{
+    async oneTimeTransfer() {
+      try {
         this.submitting = true;
         await state.dispatch('robinhood/ACHTransfer', this.oneTimeFormData);
         this.submitting = false;
         this.onetime_transfer_complete = true;
         await state.dispatch('robinhood/getACHTransfers');
-        await state.dispatch('robinhood/getAccounts'); //Update balances
-      }catch(e){
+        await state.dispatch('robinhood/getAccounts'); // Update balances
+      } catch (e) {
         this.submitting = false;
         this.onetime_transfer_complete = false;
         this.transfer_error = e.toString();
@@ -167,19 +167,19 @@ export default {
     }
   },
   watch: {
-    ACHRelationships(){
-      if(this.ACHRelationships.length > 0){
+    ACHRelationships() {
+      if (this.ACHRelationships.length > 0) {
         this.onetime_ach_source = this.ACHRelationships[0].url;
       }
     },
-    transfer_error(){
-      setTimeout(() => this.transfer_error = null, 3000);
+    transfer_error() {
+      setTimeout(() => { this.transfer_error = null; }, 3000);
     },
-    onetime_transfer_complete(status){
-      if(status){
-        setTimeout(() => this.onetime_transfer_complete = false, 3000);
+    onetime_transfer_complete(status) {
+      if (status) {
+        setTimeout(() => { this.onetime_transfer_complete = false; }, 3000);
       }
     }
   }
-}
+};
 </script>

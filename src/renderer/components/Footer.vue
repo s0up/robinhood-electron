@@ -21,36 +21,34 @@ import state from '@/state';
 
 export default {
   computed: {
-    account(){
+    account() {
       return state.getters['robinhood/currentAccount'];
     },
-    robinhoodUser(){
+    robinhoodUser() {
       return state.getters['robinhood/robinhoodUser'];
     },
-    portfolio(){
+    portfolio() {
       return state.getters['robinhood/resource'](this.account.portfolio);
     },
-    nyse(){
-      if(!this.markets){
-        return;
+    nyse() {
+      if (!this.markets) {
+        return null;
       }
 
-      return this.markets.find(market => {
-        return market.acronym == 'NYSE';
-      });
+      return this.markets.find(market => market.acronym === 'NYSE');
     },
-    marketClose(){
-      if(!this.nyse){
-        return;
+    marketClose() {
+      if (!this.nyse) {
+        return null;
       }
 
       return this.nyse.todays_hours.closes_at;
     },
-    markets(){
+    markets() {
       return state.getters['robinhood/markets'];
     }
   }
-}
+};
 </script>
 <style>
 html{  position: relative;

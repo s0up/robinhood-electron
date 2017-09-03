@@ -14,22 +14,22 @@ import Layout from '@/components/Layout';
 import state from '@/state';
 
 export default {
-   name: 'app',
-   created(){
-     state.dispatch('monitorUpdates');
-   },
-   components: {
-      'login-page' : LoginPage,
-      'layout': Layout,
-      'window-top': WindowTop
-   },
-   computed: {
-      loggedIn: function(){
-         return state.getters['auth/loginState'];
-      },
-      loginStateChecked: function(){
-         return state.getters['auth/loginStateChecked'];
-      }
-   }
-}
+  name: 'app',
+  created() {
+    state.dispatch('monitorUpdates');
+  },
+  components: {
+    'login-page': LoginPage,
+    layout: Layout,
+    'window-top': WindowTop
+  },
+  computed: {
+    loggedIn() {
+      return state.getters['auth/loginState'];
+    },
+    loginStateChecked() {
+      return state.getters['auth/loginStateChecked'];
+    }
+  }
+};
 </script>

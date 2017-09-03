@@ -37,50 +37,50 @@ import state from '@/state';
 import Order from '@/components/RecentOrders/Order';
 
 export default {
-   name: 'recent-orders',
-   created(){
-      this.getRecentOrders();
-   },
-   data(){
-     return {
-       recentOrderTimer: setTimeout(function(){}, 0)
-     }
-   },
-   beforeDestroy(){
-     clearTimeout(this.recentOrderTimer);
-   },
-   methods: {
-      nextPage: function(){
-        state.dispatch('robinhood/getRecentOrders', self.nextOrder);
-      },
-      previousPage: function(){
-         state.dispatch('robinhood/getRecentOrders', self.previousOrder);
-      },
-      async getRecentOrders(){
-        clearTimeout(this.recentOrderTimer);
+  name: 'recent-orders',
+  created() {
+    this.getRecentOrders();
+  },
+  data() {
+    return {
+      recentOrderTimer: setTimeout(() => {}, 0)
+    };
+  },
+  beforeDestroy() {
+    clearTimeout(this.recentOrderTimer);
+  },
+  methods: {
+    nextPage() {
+      state.dispatch('robinhood/getRecentOrders', self.nextOrder);
+    },
+    previousPage() {
+      state.dispatch('robinhood/getRecentOrders', self.previousOrder);
+    },
+    async getRecentOrders() {
+      clearTimeout(this.recentOrderTimer);
 
-        try{
-          await state.dispatch('robinhood/getRecentOrders');
-        }catch(e){
-          console.log("Unable to get recent orders...");
-        }
+      try {
+        await state.dispatch('robinhood/getRecentOrders');
+      } catch (e) {
+        console.log('Unable to get recent orders...');
+      }
 
-        this.recentOrderTimer = setTimeout(() => this.getRecentOrders(), 10000);
-      }
-   },
-   computed: {
-      previousOrder: function(){
-         return state.getters['robinhood/previousOrder'];
-      },
-      nextOrder: function(){
-         return state.getters['robinhood/nextOrder'];
-      },
-      orders: function(){
-         return state.getters['robinhood/recentOrders'];
-      }
-   },
-   components: {
-      'recent-order': Order
-   }
-}
+      this.recentOrderTimer = setTimeout(() => this.getRecentOrders(), 10000);
+    }
+  },
+  computed: {
+    previousOrder() {
+      return state.getters['robinhood/previousOrder'];
+    },
+    nextOrder() {
+      return state.getters['robinhood/nextOrder'];
+    },
+    orders() {
+      return state.getters['robinhood/recentOrders'];
+    }
+  },
+  components: {
+    'recent-order': Order
+  }
+};
 </script>

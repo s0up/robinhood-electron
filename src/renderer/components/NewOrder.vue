@@ -31,19 +31,19 @@
       <div class="form-group">
         <div class="alert alert-info alert-dismissible alert-green" role="alert">
           <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-          <span v-if="time_in_force == 'gfd'">
+          <span v-if="time_in_force === 'gfd'">
             A day order or good for day order (GFD) (the most common) is a market or limit order that is in force from the time the order is submitted to the end of the day's trading session. For stock markets, the closing time is defined by the exchange.
           </span>
-          <span v-if="time_in_force == 'gtc'">
+          <span v-if="time_in_force === 'gtc'">
             A good 'til canceled (GTC) order can be placed by an investor to buy or sell a security at a specified price that remains active until it is either rescinded by the investor or the trade is executed. GTC orders offer an alternative to placing a sequence of day orders, which expire at the end of each trading day.
           </span>
-          <span v-if="time_in_force == 'ioc'">
+          <span v-if="time_in_force === 'ioc'">
             An immediate or cancel (IOC) order, also known as an "accept order", is a finance term used in investment banking or securities transactions that refers "an order to buy or sell a stock that must be executed immediately".
           </span>
-          <span v-if="time_in_force == 'fok'">
+          <span v-if="time_in_force === 'fok'">
             A fill or kill (FOK) order is "an order to buy or sell a stock that must be executed immediately"—a few seconds, customarily—in its entirety; otherwise, the entire order is cancelled; no partial fulfillments are allowed.
           </span>
-          <span v-if="time_in_force == 'opg'">
+          <span v-if="time_in_force === 'opg'">
             OPG is used with a Limit order to indicate a Limit-On-Open order, or with a Market order to indicate a Market-on-Open order.
           </span>
         </div>
@@ -99,7 +99,6 @@
 </template>
 <script>
 import state from '@/state';
-import util from '@/util/util';
 
 export default {
   props: ['symbol', 'buySide'],
@@ -122,11 +121,11 @@ export default {
       order_error: null,
       submitting: false,
       order_complete: false
-    }
+    };
   },
   computed: {
-    orderTotal(){
-      if(isNaN(parseFloat(this.quantity)) || isNaN(parseFloat(this.price))){
+    orderTotal() {
+      if (isNaN(parseFloat(this.quantity)) || isNaN(parseFloat(this.price))) {
         return 0;
       }
 
@@ -138,15 +137,15 @@ export default {
     account() {
       return state.getters['robinhood/currentAccount'];
     },
-    instrument(){
-      if(!this.quote){
-        return;
+    instrument() {
+      if (!this.quote) {
+        return null;
       }
 
       return state.getters['robinhood/instrument'](this.quote.instrument);
     },
-    formData(){
-      let formData = {
+    formData() {
+      const formData = {
         account: this.account.url,
         instrument: this.instrument.url,
         symbol: this.symbol,
@@ -156,63 +155,66 @@ export default {
         quantity: this.quantity,
         side: this.side,
         price: this.price
-      }
+      };
 
-      if(this.trigger === 'stop'){
+      if (this.trigger === 'stop') {
         formData.stop_price = this.stop_price;
       }
 
-      if(this.extended_hours === true){
+      if (this.extended_hours === true) {
         formData.extended_hours = true;
       }
 
       return formData;
     },
-    maxCanBuy(){
-      return parseFloat((Math.floor(Number(this.account.computed_buying_power) / Number(this.quote.ask_price)).toFixed(0)));
+    maxCanBuy() {
+      return parseFloat(
+        (Math.floor(Number(this.account.computed_buying_power) / Number(this.quote.ask_price))
+        .toFixed(0))
+      );
     }
   },
   methods: {
-    async order(){
-      console.log("Submitting order", this.formData);
+    async order() {
+      console.log('Submitting order', this.formData);
 
       this.submitting = true;
 
-      try{
+      try {
         await state.dispatch('robinhood/placeOrder', this.formData);
         this.submitting = false;
         this.order_complete = true;
-      }catch(e){
+      } catch (e) {
         this.order_error = e.toString();
         this.submitting = false;
       }
     },
-    updatePrice(){
-      if(this.side == 'buy'){
+    updatePrice() {
+      if (this.side === 'buy') {
         this.price = parseFloat(this.quote.ask_price).toFixed(2);
-      }else{
+      } else {
         this.price = parseFloat(this.quote.bid_price).toFixed(2);
       }
     }
   },
   watch: {
-    quantity(){
+    quantity() {
       this.updatePrice();
     },
-    side(){
+    side() {
       this.updatePrice();
     },
-    order_error(){
-      setTimeout(() => this.order_error = null, 3000);
+    order_error() {
+      setTimeout(() => { this.order_error = null; }, 3000);
     },
-    order_complete(status){
-      if(status){
-        state.dispatch('robinhood/getAccounts'); //Update balances, etc
+    order_complete(status) {
+      if (status) {
+        state.dispatch('robinhood/getAccounts'); // Update balances, etc
         this.$emit('orderComplete');
       }
     }
   }
-}
+};
 </script>
 <style scoped>
 .fade-enter-active,

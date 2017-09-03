@@ -35,64 +35,65 @@
 <script>
 import state from '@/state';
 import _ from 'lodash';
-import {shell} from 'electron';
+import { shell } from 'electron';
 
 export default {
   name: 'main-nav',
-  data(){
+  data() {
     return {
-      ticker_search: "",
+      ticker_search: '',
       search_focused: false,
       no_results_found: false
-    }
+    };
   },
   methods: {
-    openUpdateLink(){
-      shell.openExternal("https://github.com/s0up/robinhood-electron/releases");
+    openUpdateLink() {
+      shell.openExternal('https://github.com/s0up/robinhood-electron/releases');
     },
-    logout: function(){
+    logout() {
       state.dispatch('auth/logout');
     },
-    loseFocus(){
+    loseFocus() {
       setTimeout(() => {
         this.search_focused = false;
-        this.ticker_search = "";
-      }, 500)
+        this.ticker_search = '';
+      }, 500);
     },
-    search: _.debounce(function(){
+    // eslint-disable-next-line func-names
+    search: _.debounce(function () {
       this.handleSearch();
     }, 500),
-    async handleSearch(){
+    async handleSearch() {
       this.search_focused = true;
       this.no_results_found = false;
 
-      if(this.ticker_search == ""){
+      if (this.ticker_search === '') {
         return;
       }
 
-      let ticker = this.ticker_search.toUpperCase();
+      const ticker = this.ticker_search.toUpperCase();
 
-      try{
+      try {
         await state.dispatch('robinhood/search', ticker);
 
-        if(this.searchResults.length == 0){
+        if (this.searchResults.length === 0) {
           this.no_results_found = true;
         }
-      }catch(e){
+      } catch (e) {
         this.no_results_found = true;
       }
     },
-    gotoStock(symbol){
-      this.ticker_search = "";
+    gotoStock(symbol) {
+      this.ticker_search = '';
       this.search_focused = false;
-      this.$router.push({name: 'stock-view', params: {symbol: symbol}});
+      this.$router.push({ name: 'stock-view', params: { symbol } });
     }
   },
   computed: {
-    userData: function(){
+    userData() {
       return state.getters['auth/userData'];
     },
-    account: function(){
+    account() {
       return state.getters['robinhood/currentAccount'];
     },
     searchResults: () => state.getters['robinhood/searchResults'],
@@ -102,7 +103,7 @@ export default {
   watch: {
 
   }
-}
+};
 </script>
 <style scoped>
 .navbar-inverse .navbar-brand {

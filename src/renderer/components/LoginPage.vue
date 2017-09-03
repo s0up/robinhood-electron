@@ -19,21 +19,21 @@ import util from '@/util/util';
 
 export default {
   name: 'login-page',
-  async created(){
-    try{
-      let creds = await util.storage('get', [
+  async created() {
+    try {
+      const creds = await util.storage('get', [
         'loginCredentials'
       ]);
 
-      if(creds && Object.keys(creds).length > 0){
+      if (creds && Object.keys(creds).length > 0) {
         this.username = creds.username;
         this.password = creds.password;
 
-        console.log("CREDS", creds, Object.is(creds, {}));
+        console.log('CREDS', creds, Object.is(creds, {}));
         this.login();
       }
-    }catch(e){
-      console.log("Storage error", e);
+    } catch (e) {
+      console.log('Storage error', e);
     }
   },
   data() {
@@ -42,26 +42,26 @@ export default {
       password: null,
       error: null,
       pendingLogin: false
-    }
+    };
   },
   methods: {
     async login() {
       this.pendingLogin = true;
 
-      try{
-        await state.dispatch('auth/login', {username: this.username, password: this.password});
+      try {
+        await state.dispatch('auth/login', { username: this.username, password: this.password });
 
         return;
-      }catch(e){
+      } catch (e) {
         this.pendingLogin = false;
         this.error = e.toString();
       }
     }
   },
   watch: {
-    error: (value) => {
-      setTimeout(() => this.error = null, 3000);
+    error: () => {
+      setTimeout(() => { this.error = null; }, 3000);
     }
   }
-}
+};
 </script>

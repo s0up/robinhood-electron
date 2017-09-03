@@ -20,40 +20,40 @@ import state from '@/state';
 
 export default {
   props: ['watchlist'],
-  created(){
+  created() {
     this.updateWatchlist();
   },
-  data(){
+  data() {
     return {
-      watchlist_timer: setTimeout(function(){}, 0)
-    }
+      watchlist_timer: setTimeout(() => {}, 0)
+    };
   },
   computed: {
-    watchlistData(){
+    watchlistData() {
       return state.getters['robinhood/watchlistData'](this.watchlist.url);
     }
   },
   methods: {
-    async updateWatchlist(){
+    async updateWatchlist() {
       clearTimeout(this.watchlist_timer);
 
-      try{
+      try {
         await state.dispatch('robinhood/getWatchlist', this.watchlist.url);
-      }catch(e){
-        console.log("Failed to retrieve watchlist data...");
+      } catch (e) {
+        console.log('Failed to retrieve watchlist data...');
       }
 
       this.watchlist_timer = setTimeout(() => this.updateWatchlist(), 60000);
     },
-    deleteWatchlistItem(item){
-      console.log("Deletign item", item);
+    deleteWatchlistItem(item) {
+      console.log('Deletign item', item);
     }
   },
-  beforeDestroy(){
+  beforeDestroy() {
     clearTimeout(this.watchlist_timer);
   },
   components: {
     'watchlist-item': WatchlistItem
   }
-}
+};
 </script>

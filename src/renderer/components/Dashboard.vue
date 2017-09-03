@@ -81,7 +81,7 @@ import Watchlist from '@/components/Watchlist';
 import moment from 'moment';
 
 export default {
-  async created() { //Requests historical data from Robinhood for the following attributes
+  async created() { // Requests historical data from Robinhood for the following attributes
     this.accountNumber = this.account.account_number;
     this.updateData();
 
@@ -89,20 +89,20 @@ export default {
       await state.dispatch('robinhood/getWatchlists');
       await state.dispatch('robinhood/getCards');
     } catch (e) {
-      console.log("Error retrieving dashboard data...", e);
+      console.log('Error retrieving dashboard data...', e);
     }
   },
-  data() { //Initializes ChartOptions as null
+  data() { // Initializes ChartOptions as null
     return {
       chartOptions: null,
-      updateTimer: setTimeout(function() {}, 0),
+      updateTimer: setTimeout(() => {}, 0),
       graphInterval: '5minute',
       graphSpan: 'day',
       accountNumber: null,
       currentWatchlist: null,
       graphLoading: false,
       gains: {}
-    }
+    };
   },
   computed: {
     account() {
@@ -119,14 +119,14 @@ export default {
         account_number: this.accountNumber,
         interval: this.graphInterval,
         span: this.graphSpan
-      }
+      };
     },
     historicals() {
       return state.getters['robinhood/historical'](this.graphView);
     },
     graphData() {
       if (!this.historicals) {
-        return;
+        return null;
       }
 
       return this.getLineGraphData(this.historicals);
@@ -152,69 +152,65 @@ export default {
         await state.dispatch('robinhood/getAccounts');
         this.graphLoading = false;
       } catch (e) {
-        console.log("Unable to load dashboard data...", e);
+        console.log('Unable to load dashboard data...', e);
       }
 
       this.updateTimer = setTimeout(() => this.updateData(true), 20000);
     },
     async dismissCard(card) {
       try {
-        let urlPieces = card.url.split('/');
-        let cardId = urlPieces[urlPieces.length - 2];
-        let cards = state.getters['robinhood/cards'];
+        const urlPieces = card.url.split('/');
+        const cardId = urlPieces[urlPieces.length - 2];
+        const cards = state.getters['robinhood/cards'];
 
-        cards.splice(cards.findIndex(item => item.url == card.url), 1);
+        cards.splice(cards.findIndex(item => item.url === card.url), 1);
 
         state.commit('setCards', cards);
 
         await state.dispatch('robinhood/dismissCard', cardId);
       } catch (e) {
-        console.log("Card removal failed", e);
+        console.log('Card removal failed', e);
       }
     },
     getLineGraphData(data) {
-      let lineGraphData = [];
-      let priceData = [];
-      let priceLabelData = [];
-      let momentFormat = "LT";
+      const lineGraphData = [];
+      const priceData = [];
+      const priceLabelData = [];
+      let momentFormat = 'LT';
 
       switch (data.span) {
         case 'week':
-          momentFormat = "MMM Do";
+          momentFormat = 'MMM Do';
           break;
         case 'month':
-          momentFormat = "MMM Do";
+          momentFormat = 'MMM Do';
           break;
         case '3month':
-          momentFormat = "MMM Do";
-        break;
+          momentFormat = 'MMM Do';
+          break;
         case 'year':
-          momentFormat = "MMM Do";
+          momentFormat = 'MMM Do';
           break;
         case '5year':
-          momentFormat = "MMM YYYY";
+          momentFormat = 'MMM YYYY';
           break;
         case 'all':
-          momentFormat = "MMM YYYY";
+          momentFormat = 'MMM YYYY';
           break;
         default:
-          momentFormat = "LT";
+          momentFormat = 'LT';
           break;
       }
 
-      if(data.span === 'month'){
-        data.equity_historicals = data.equity_historicals.filter(item => {
-          return (moment(new Date(item.begins_at)).isAfter(moment().subtract(1, 'month'))) ? true : false;
-        });
+      if (data.span === 'month') {
+        data.equity_historicals = data.equity_historicals.filter(item => !!(moment(new Date(item.begins_at)).isAfter(moment().subtract(1, 'month'))));
       }
 
-      if(data.span === '3month'){
-        data.equity_historicals = data.equity_historicals.filter(item => {
-          return (moment(new Date(item.begins_at)).isAfter(moment().subtract(3, 'month'))) ? true : false;
-        });
+      if (data.span === '3month') {
+        data.equity_historicals = data.equity_historicals.filter(item => !!(moment(new Date(item.begins_at)).isAfter(moment().subtract(3, 'month'))));
       }
 
-      data.equity_historicals.forEach(function(item) {
+      data.equity_historicals.forEach((item) => {
         priceData.push(parseFloat(item.adjusted_close_equity).toFixed(2));
         priceLabelData.push(moment(new Date(item.begins_at)).format(momentFormat));
       });
@@ -223,35 +219,39 @@ export default {
       let first = 0;
       let afterHours = null;
 
-      if(data.span === "day"){
-        last =  Number(this.portfolio.equity).toFixed(2);
+      if (data.span === 'day') {
+        last = Number(this.portfolio.equity).toFixed(2);
         first = parseFloat(this.portfolio.adjusted_equity_previous_close);
 
-        if(this.portfolio.extended_hours_equity){
+        if (this.portfolio.extended_hours_equity) {
           afterHours = {
             last: Number(this.portfolio.extended_hours_equity).toFixed(2),
             first: parseFloat(this.portfolio.adjusted_equity_previous_close)
-          }
+          };
         }
-      }else{
-        last = (this.portfolio.extended_hours_equity) ? Number(this.portfolio.extended_hours_equity).toFixed(2) : Number(this.portfolio.equity).toFixed(2);
-        first = data.equity_historicals[0].adjusted_open_equity || data.equity_historicals[0].close_price;
+      } else {
+        last = (this.portfolio.extended_hours_equity) ?
+          Number(this.portfolio.extended_hours_equity).toFixed(2)
+          : Number(this.portfolio.equity).toFixed(2);
+
+        first = data.equity_historicals[0].adjusted_open_equity
+          || data.equity_historicals[0].close_price;
       }
 
-      console.log("EQUITY:", last - first, "AFTER HOURS:", ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
+      console.log('EQUITY:', last - first, 'AFTER HOURS:', ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
 
       this.$set(this.gains, 'last', last);
       this.$set(this.gains, 'first', first);
       this.$set(this.gains, 'after_hours', afterHours);
 
-      let change = (last - first).toFixed(2);
+      const change = (last - first).toFixed(2);
 
-      let title = util.formatMoney(change, true) + ' [' + util.formatPercent(first, last) + ']';
+      let title = `${util.formatMoney(change, true)} [${util.formatPercent(first, last)}]`;
 
-      if(afterHours){
-        let ahChange = (afterHours.last - afterHours.first).toFixed(2);
+      if (afterHours) {
+        const ahChange = (afterHours.last - afterHours.first).toFixed(2);
 
-        title += ' (' + util.formatMoney(ahChange - change, true) + ' A.H)';
+        title += ` (${util.formatMoney(ahChange - change, true)} A.H)`;
       }
 
       this.chartOptions = {
@@ -286,10 +286,10 @@ export default {
             scaleLabel: {
               display: true,
               labelString: 'Value ($)',
-              fontColor: "#FFFFFF",
+              fontColor: '#FFFFFF',
             },
             gridLines: {
-              color: "#FFFFFF",
+              color: '#FFFFFF',
               lineWidth: 2,
             },
             ticks: {
@@ -301,7 +301,7 @@ export default {
             display: true,
             autoSkip: true,
             gridLines: {
-              color: "#FFFFFF",
+              color: '#FFFFFF',
               lineWidth: 2,
             },
             ticks: {
@@ -309,7 +309,7 @@ export default {
             }
           }]
         }
-      }
+      };
 
       lineGraphData.push({
         label: 'Portfolio Value',
@@ -317,14 +317,14 @@ export default {
         fill: false,
         pointRadius: 0,
         borderColor: '#00CC99',
-        lineTension: .05,
+        lineTension: 0.05,
         data: priceData
       });
 
       return {
         labels: priceLabelData,
         datasets: lineGraphData
-      }
+      };
     }
   },
   watch: {
@@ -339,12 +339,12 @@ export default {
   },
   components: {
     'line-chart': LineChart,
-    'watchlist': Watchlist
+    watchlist: Watchlist
   },
   beforeDestroy() {
     clearTimeout(this.updateTimer);
   }
-}
+};
 </script>
 
 <style>

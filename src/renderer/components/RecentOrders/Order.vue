@@ -15,7 +15,7 @@
    </tr>
 </template>
 <script>
-/*Sample order data
+/* Sample order data
 account:"https://api.robinhood.com/accounts/5RX96505/"
 average_price:"106.25000000"
 cancel:null
@@ -49,52 +49,52 @@ import moment from 'moment';
 import TickerLink from '@/components/Common/TickerLink';
 
 export default {
-   name: 'recent-order',
-   props: ['row'],
-   created(){
+  name: 'recent-order',
+  props: ['row'],
+  created() {
 
-   },
-   data(){
-     return {
-       canceling: false
-     }
-   },
-   computed: {
-      orderAge: function(){
-         return moment(new Date(this.order.created_at)).fromNow().toString();
-      },
-      order: function(){
-         return this.row;
-      },
-      canCancel(){
-        return this.order.cancel !== null;
-      },
-      instrument(){
-        return state.getters['robinhood/instrument'](this.order.instrument);
-      }
-   },
-   methods: {
-     cancel(){
-       var self = this;
+  },
+  data() {
+    return {
+      canceling: false
+    };
+  },
+  computed: {
+    orderAge() {
+      return moment(new Date(this.order.created_at)).fromNow().toString();
+    },
+    order() {
+      return this.row;
+    },
+    canCancel() {
+      return this.order.cancel !== null;
+    },
+    instrument() {
+      return state.getters['robinhood/instrument'](this.order.instrument);
+    }
+  },
+  methods: {
+    cancel() {
+      const self = this;
 
-       this.canceling = true;
+      this.canceling = true;
 
-       (async () => {
-         try{
-           await state.dispatch('robinhood/cancelOrder', self.order.cancel);
-           await state.dispatch('robinhood/getRecentOrders');
+      (async () => {
+        try {
+          await state.dispatch('robinhood/cancelOrder', self.order.cancel);
+          await state.dispatch('robinhood/getRecentOrders');
 
-           self.canceling = false;
+          self.canceling = false;
 
-           await state.dispatch('robinhood/getAccounts'); //Update balances, etc
-         }catch(e){
-           console.log("Something went wrong canceling this order ", e);
-         }
-       })();
-     }
-   },
-   components: {
-     'ticker-link': TickerLink
-   }
-}
+          await state.dispatch('robinhood/getAccounts'); // Update balances, etc
+        } catch (e) {
+          console.log('Something went wrong canceling this order ', e);
+        }
+      })();
+    }
+  },
+  components: {
+    'ticker-link': TickerLink
+  }
+};
 </script>

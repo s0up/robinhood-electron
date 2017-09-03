@@ -10,22 +10,22 @@ export default {
   },
 
   actions: {
-    async checkLoginState(state){
-      try{
-        let loginState = await util.post('/user/checkLoginState');
+    async checkLoginState(state) {
+      try {
+        const loginState = await util.post('/user/checkLoginState');
 
-        if(loginState.result == true){
+        if (loginState.result === true) {
           state.commit('setLoginStateChecked', true);
           state.commit('setLoginState', true);
           state.commit('setUserData', loginState.userData);
-        }else{
+        } else {
           state.commit('setLoginStateChecked', true);
           state.commit('setLoginState', false);
           state.commit('setUserData', null);
         }
 
         return;
-      }catch(e){
+      } catch (e) {
         state.commit('setLoginStateChecked', true);
         state.commit('setLoginState', false);
         state.commit('setUserData', null);
@@ -34,9 +34,9 @@ export default {
       }
     },
 
-    async login(state, credentials){
-      try{
-        let loginResult = await util.post('/user/login', {username: credentials.username, password: credentials.password});
+    async login(state, credentials) {
+      try {
+        const loginResult = await util.post('/user/login', { username: credentials.username, password: credentials.password });
 
         await util.storage('set', ['loginCredentials', credentials]);
 
@@ -45,7 +45,7 @@ export default {
         state.commit('setUserData', loginResult.result);
 
         return loginResult;
-      }catch(e){
+      } catch (e) {
         state.commit('setLoginStateChecked', true);
         state.commit('setLoginState', false);
         state.commit('setUserData', null);
@@ -54,32 +54,34 @@ export default {
       }
     },
 
-    async logout(state){
-      try{
+    async logout(state) {
+      try {
         await util.post('/user/logout');
         await util.storage('remove', ['loginCredentials']);
 
         state.commit('setLoginState', false);
         state.commit('setLoginStateChecked', true);
 
-        location.reload(); //Reset vuex the lazy way
+        location.reload(); // Reset vuex the lazy way
 
         return;
-      }catch(e){
+      } catch (e) {
         throw e;
       }
     }
   },
 
   mutations: {
-    setLoginState: (state, loginState) => state.loginState = loginState,
-    setLoginStateChecked: (state, loginStateChecked) => state.loginStateChecked = loginStateChecked,
-    setUserData: (state, userData) => state.userData = userData
+    setLoginState: (state, loginState) => { state.loginState = loginState; },
+    setLoginStateChecked: (state, loginStateChecked) => {
+      state.loginStateChecked = loginStateChecked;
+    },
+    setUserData: (state, userData) => { state.userData = userData; }
   },
 
   getters: {
-    loginState: (state) => state.loginState,
-    loginStateChecked: (state) => state.loginStateChecked,
-    userData: (state) => state.userData
+    loginState: state => state.loginState,
+    loginStateChecked: state => state.loginStateChecked,
+    userData: state => state.userData
   }
-}
+};

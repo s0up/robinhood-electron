@@ -3,14 +3,14 @@ import Router from 'vue-router';
 
 import state from '@/state';
 
-/*User def components*/
+/* User def components */
 import Dashboard from '@/components/Dashboard';
 import Positions from '@/components/Positions';
 import RecentOrders from '@/components/RecentOrders';
 import StockView from '@/components/StockView';
 import Banking from '@/components/Banking';
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
   routes: [
@@ -47,7 +47,7 @@ const router = new Router({
   ]
 });
 
-router.beforeEach(function(to, from, next){
+router.beforeEach((to, from, next) => {
   state.dispatch('auth/checkLoginState');
 
   return next();

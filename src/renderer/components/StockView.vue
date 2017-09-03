@@ -21,12 +21,12 @@
     <div class="clear"></div>
     <new-order v-if="isBuying" v-on:orderComplete="orderComplete" v-on:cancelOrder="isBuying = false" :symbol="symbol" :buySide="buySide"></new-order>
     <ul class="nav nav-tabs nav-justified">
-      <li role="presentation" v-bind:class="{'active': historicalSpan == 'day'}" @click="historicalSpan = 'day'; historicalInterval = '5minute'"><a>Day</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan == 'week'}" @click="historicalSpan = 'week'; historicalInterval = '10minute'"><a>Week</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan == 'month'}" @click="historicalSpan = 'month'; historicalInterval = 'day'"><a>Month</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan == '3month'}" @click="historicalSpan = '3month'; historicalInterval = 'day'"><a>3 Month</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan == 'year'}" @click="historicalSpan = 'year'; historicalInterval = 'day'"><a>Year</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan == '5year'}" @click="historicalSpan = '5year'; historicalInterval = 'week'"><a>5 Year</a></li>
+      <li role="presentation" v-bind:class="{'active': historicalSpan === 'day'}" @click="historicalSpan = 'day'; historicalInterval = '5minute'"><a>Day</a></li>
+      <li role="presentation" v-bind:class="{'active': historicalSpan === 'week'}" @click="historicalSpan = 'week'; historicalInterval = '10minute'"><a>Week</a></li>
+      <li role="presentation" v-bind:class="{'active': historicalSpan === 'month'}" @click="historicalSpan = 'month'; historicalInterval = 'day'"><a>Month</a></li>
+      <li role="presentation" v-bind:class="{'active': historicalSpan === '3month'}" @click="historicalSpan = '3month'; historicalInterval = 'day'"><a>3 Month</a></li>
+      <li role="presentation" v-bind:class="{'active': historicalSpan === 'year'}" @click="historicalSpan = 'year'; historicalInterval = 'day'"><a>Year</a></li>
+      <li role="presentation" v-bind:class="{'active': historicalSpan === '5year'}" @click="historicalSpan = '5year'; historicalInterval = 'week'"><a>5 Year</a></li>
     </ul>
     <div class="graph-loading text-center" v-if="graphLoading">
       <img style="width: 50px; margin: 40px auto;" src="~@/assets/loading.gif"/>
@@ -44,10 +44,10 @@
     <hr>
     <div class='stock-extra-info'>
       <ul class="nav nav-pills nav-justified">
-        <li role="presentation" v-bind:class="{'active': activeTab == 'price'}" @click="activeTab = 'price'"><a>Price Information</a></li>
-        <li role="presentation" v-bind:class="{'active': activeTab == 'companyInfo'}" @click="activeTab = 'companyInfo'"><a>Company Fundamentals</a></li>
+        <li role="presentation" v-bind:class="{'active': activeTab === 'price'}" @click="activeTab = 'price'"><a>Price Information</a></li>
+        <li role="presentation" v-bind:class="{'active': activeTab === 'companyInfo'}" @click="activeTab = 'companyInfo'"><a>Company Fundamentals</a></li>
       </ul>
-      <div v-if="activeTab == 'price'">
+      <div v-if="activeTab === 'price'">
         <div class="clear">&nbsp;</div>
         <div class="row stock-info-buttons">
           <div class="col-sm-3">
@@ -77,7 +77,7 @@
         </div>
       </div>
       <!-- Price info end -->
-      <div v-if="activeTab == 'companyInfo'">
+      <div v-if="activeTab === 'companyInfo'">
         <div class="clear">&nbsp;</div>
         <div class="row stock-info-buttons">
           <div class="col-sm-3">
@@ -152,7 +152,7 @@
 </div>
 </template>
 <script>
-import {shell} from 'electron';
+import { shell } from 'electron';
 import NewOrder from '@/components/NewOrder';
 import Position from '@/components/Positions/Position';
 import PositionTable from '@/components/Positions/PositionTable';
@@ -165,9 +165,9 @@ import util from '@/util/util';
 
 export default {
   created() {
-    var self = this;
+    const self = this;
 
-    (async() => {
+    (async () => {
       try {
         await state.dispatch('robinhood/getQuote', this.symbol);
         await state.dispatch('robinhood/getNews', this.symbol);
@@ -185,12 +185,12 @@ export default {
       buySide: 'buy',
       quoteError: false,
       chartOptions: null,
-      updateTimer: setTimeout(function() {}, 0),
+      updateTimer: setTimeout(() => {}, 0),
       historicalInterval: '5minute',
       historicalSpan: 'day',
       activeTab: 'price',
       graphLoading: false
-    }
+    };
   },
   beforeDestroy() {
     clearTimeout(this.updateTimer);
@@ -213,27 +213,25 @@ export default {
         symbol: this.symbol,
         interval: this.historicalInterval,
         span: this.historicalSpan
-      }
+      };
     },
     currentPosition() {
-      var self = this;
+      return this.positions.find((position) => {
+        const instrument = state.getters['robinhood/instrument'](position.instrument);
 
-      return this.positions.find(position => {
-        let instrument = state.getters['robinhood/instrument'](position.instrument);
-
-        return instrument.symbol == this.symbol
+        return instrument.symbol === this.symbol;
       });
     },
     instrument() {
       if (!this.quote) {
-        return;
+        return null;
       }
 
       return state.getters['robinhood/instrument'](this.quote.instrument);
     },
-    fundamentals(){
-      if(!this.instrument){
-        return;
+    fundamentals() {
+      if (!this.instrument) {
+        return null;
       }
 
       return state.getters['robinhood/resource'](this.instrument.fundamentals);
@@ -242,8 +240,8 @@ export default {
       return state.getters['robinhood/tickerHistorical'](this.currentHistoricalView);
     },
     lineGraphData() {
-      if(!this.historical){
-        return;
+      if (!this.historical) {
+        return null;
       }
 
       return this.getLineGraphData(this.historical);
@@ -251,11 +249,11 @@ export default {
   },
   watch: {
     symbol() {
-      var self = this;
+      const self = this;
 
       self.quoteError = false;
 
-      (async() => {
+      (async () => {
         try {
           await state.dispatch('robinhood/getQuote', this.symbol);
         } catch (e) {
@@ -271,30 +269,30 @@ export default {
     quote() {
       this.loaded = true;
     },
-    currentHistoricalView(){
+    currentHistoricalView() {
       this.updateData();
     },
-    instrument(instrument){
-      if(!this.fundamentals){
+    instrument(instrument) {
+      if (!this.fundamentals) {
         state.dispatch('robinhood/getResource', instrument.fundamentals);
       }
     }
   },
   methods: {
-    openUrl(url){
+    openUrl(url) {
       shell.openExternal(url);
     },
     orderComplete() {
-      setTimeout(() => this.isBuying = false, 5000);
+      setTimeout(() => { this.isBuying = false; }, 5000);
     },
-    formatMoney(money){
+    formatMoney(money) {
       return util.formatMoney(money);
     },
     async updateData(skipLoading) {
       clearTimeout(this.updateTimer);
 
-      try{
-        if(!this.historical || !skipLoading){
+      try {
+        if (!this.historical || !skipLoading) {
           this.graphLoading = true;
         }
 
@@ -303,55 +301,51 @@ export default {
         await state.dispatch('robinhood/getQuote', this.symbol);
 
         this.graphLoading = false;
-      }catch(e){
-        console.log("Unable to get stock view information...", e);
+      } catch (e) {
+        console.log('Unable to get stock view information...', e);
       }
 
       this.updateTimer = setTimeout(() => {
-        this.updateData(true)
+        this.updateData(true);
       }, 10000);
     },
     getLineGraphData(data) {
-      let lineGraphData = [];
-      let priceData = [];
-      let priceLabelData = [];
+      const lineGraphData = [];
+      const priceData = [];
+      const priceLabelData = [];
 
-      let momentFormat = "LT";
+      let momentFormat = 'LT';
 
       switch (data.span) {
         case 'week':
-          momentFormat = "MMM Do";
+          momentFormat = 'MMM Do';
           break;
         case 'month':
-          momentFormat = "MMM Do";
+          momentFormat = 'MMM Do';
           break;
         case '3month':
-          momentFormat = "MMM Do";
-        break;
+          momentFormat = 'MMM Do';
+          break;
         case 'year':
-          momentFormat = "MMM Do";
+          momentFormat = 'MMM Do';
           break;
         case '5year':
-          momentFormat = "MMM YYYY";
+          momentFormat = 'MMM YYYY';
           break;
         default:
-          momentFormat = "LT";
+          momentFormat = 'LT';
           break;
       }
 
-      if(data.span === 'month'){
-        data.historicals = data.historicals.filter(item => {
-          return (moment(new Date(item.begins_at)).isAfter(moment().subtract(1, 'month'))) ? true : false;
-        });
+      if (data.span === 'month') {
+        data.historicals = data.historicals.filter(item => !!(moment(new Date(item.begins_at)).isAfter(moment().subtract(1, 'month'))));
       }
 
-      if(data.span === '3month'){
-        data.historicals = data.historicals.filter(item => {
-          return (moment(new Date(item.begins_at)).isAfter(moment().subtract(3, 'month'))) ? true : false;
-        });
+      if (data.span === '3month') {
+        data.historicals = data.historicals.filter(item => !!(moment(new Date(item.begins_at)).isAfter(moment().subtract(3, 'month'))));
       }
 
-      data.historicals.forEach(function(item) {
+      data.historicals.forEach((item) => {
         priceData.push(parseFloat(item.close_price).toFixed(2));
         priceLabelData.push(moment(new Date(item.begins_at)).format(momentFormat));
       });
@@ -363,33 +357,33 @@ export default {
       let first = 0;
       let afterHours = null;
 
-      if(data.span === "day"){
-        last =  Number(this.quote.last_trade_price).toFixed(2);
+      if (data.span === 'day') {
+        last = Number(this.quote.last_trade_price).toFixed(2);
         first = parseFloat(this.quote.previous_close);
 
 
-        if(this.quote.last_extended_hours_trade_price){
+        if (this.quote.last_extended_hours_trade_price) {
           afterHours = {
             last: Number(this.quote.last_extended_hours_trade_price).toFixed(2),
             first: parseFloat(this.quote.previous_close)
-          }
+          };
         }
-      }else{
+      } else {
         last = data.historicals[data.historicals.length - 1].close_price;
         first = data.historicals[0].close_price;
       }
 
-      console.log("QUOTE EQUITY:", last - first, "AFTER HOURS:", ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
+      console.log('QUOTE EQUITY:', last - first, 'AFTER HOURS:', ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
 
 
-      let change = (last - first).toFixed(2);
+      const change = (last - first).toFixed(2);
 
-      let title = util.formatMoney(change, true) + ' [' + util.formatPercent(first, last) + ']';
+      let title = `${util.formatMoney(change, true)} [${util.formatPercent(first, last)}]`;
 
-      if(afterHours){
-        let ahChange = (afterHours.last - afterHours.first).toFixed(2);
+      if (afterHours) {
+        const ahChange = (afterHours.last - afterHours.first).toFixed(2);
 
-        title += ' (' + util.formatMoney(ahChange - change, true) + ' A.H)';
+        title += ` (${util.formatMoney(ahChange - change, true)} A.H)`;
       }
 
       this.chartOptions = {
@@ -424,10 +418,10 @@ export default {
             scaleLabel: {
               display: true,
               labelString: 'Price ($)',
-              fontColor: "#FFFFFF",
+              fontColor: '#FFFFFF',
             },
             gridLines: {
-              color: "#FFFFFF",
+              color: '#FFFFFF',
               lineWidth: 2,
             },
             ticks: {
@@ -439,7 +433,7 @@ export default {
             display: true,
             autoSkip: true,
             gridLines: {
-              color: "#FFFFFF",
+              color: '#FFFFFF',
               lineWidth: 2,
             },
             ticks: {
@@ -447,7 +441,7 @@ export default {
             }
           }]
         }
-      }
+      };
 
       lineGraphData.push({
         label: 'Price',
@@ -455,7 +449,7 @@ export default {
         fill: false,
         pointRadius: 0,
         borderColor: '#00CC99',
-        lineTension: .05,
+        lineTension: 0.05,
         data: priceData
       });
 
@@ -463,15 +457,15 @@ export default {
       return {
         labels: priceLabelData,
         datasets: lineGraphData
-      }
+      };
     }
   },
   components: {
-    'position': Position,
+    position: Position,
     'position-table': PositionTable,
     'new-order': NewOrder,
     'line-chart': LineChart,
     'ticker-link': TickerLink
   }
-}
+};
 </script>

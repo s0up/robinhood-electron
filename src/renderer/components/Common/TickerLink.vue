@@ -13,55 +13,54 @@ import state from '@/state';
 export default {
   props: ['symbol', 'basic'],
   name: 'ticker-link',
-  created(){
-    if(this.basic){
+  created() {
+    if (this.basic) {
       return;
     }
 
-    if(!state.getters['robinhood/quote'](this.symbol)){
+    if (!state.getters['robinhood/quote'](this.symbol)) {
       state.dispatch('robinhood/getQuote', this.symbol);
     }
   },
-  data(){
+  data() {
     return {
       showStats: false
-    }
+    };
   },
   computed: {
-    quote(){
+    quote() {
       return state.getters['robinhood/quote'](this.symbol);
     },
-    gainsText(){
-      if(!this.quote){
-        return;
+    gainsText() {
+      if (!this.quote) {
+        return null;
       }
 
-      return "(" + this.dayGains + "%)";
+      return `(${this.dayGains}%)`;
     },
-    dayGains(){
-      if(!this.quote){
+    dayGains() {
+      if (!this.quote) {
         return 0;
       }
 
-      return (((parseFloat(this.quote.last_trade_price) / parseFloat(this.quote.adjusted_previous_close)) * 100) - 100).toFixed(2);
+      return (
+        (
+          (parseFloat(this.quote.last_trade_price) / parseFloat(this.quote.adjusted_previous_close)
+        ) * 100) - 100
+      ).toFixed(2);
     },
-    textClass(){
-      if(this.dayGains == 0){
+    textClass() {
+      if (this.dayGains === 0) {
         return '';
       }
 
       return (this.dayGains > 0) ? 'text-success' : 'text-danger';
     }
   },
-  methods: {
-    stockStats(){
-
-    }
-  },
   watch: {
-    quote(quote){
+    quote(quote) {
       this.$emit('quote', quote);
     }
   }
-}
+};
 </script>

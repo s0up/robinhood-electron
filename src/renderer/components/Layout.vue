@@ -17,47 +17,47 @@ import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 
 export default {
-  async created(){
-    try{
+  async created() {
+    try {
       await state.dispatch('robinhood/getAccounts');
       await state.dispatch('robinhood/getUser');
       await state.dispatch('robinhood/getMarkets');
-    }catch(e){
+    } catch (e) {
       state.commit('setFatalError', 'There was a critical error connecting with Robinhood.  This could be an outage!');
       console.log(e.toString());
     }
   },
   computed: {
-    loaded(){
+    loaded() {
       return (this.userData && this.account && this.robinhoodUser && this.portfolio);
     },
-    userData: function(){
+    userData() {
       return state.getters['auth/userData'];
     },
-    account: function(){
+    account() {
       return state.getters['robinhood/currentAccount'];
     },
-    loggedIn: function(){
-       return state.getters['auth/loginState'];
+    loggedIn() {
+      return state.getters['auth/loginState'];
     },
-    loginStateChecked: function(){
-       return state.getters['auth/loginStateChecked'];
+    loginStateChecked() {
+      return state.getters['auth/loginStateChecked'];
     },
-    robinhoodUser: function(){
+    robinhoodUser() {
       return state.getters['robinhood/robinhoodUser'];
     },
-    portfolio(){
+    portfolio() {
       return state.getters['robinhood/resource'](this.account.portfolio);
     },
-    markets(){
+    markets() {
       return state.getters['robinhood/markets'];
     },
-    fatalError(){
-      return state.getters.fatalError
+    fatalError() {
+      return state.getters.fatalError;
     }
   },
   watch: {
-    account(account){
+    account(account) {
       state.dispatch('robinhood/getResource', account.portfolio);
     }
   },
@@ -65,5 +65,5 @@ export default {
     'main-nav': Nav,
     'footer-page': Footer
   }
-}
+};
 </script>

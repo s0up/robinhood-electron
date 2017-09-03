@@ -14,12 +14,12 @@ import state from '@/state';
 export default {
   props: ['data'],
   computed: {
-    instrument(){
+    instrument() {
       return state.getters['robinhood/instrument'](this.data.instrument);
     },
-    quote(){
-      if(!this.instrument){
-        return;
+    quote() {
+      if (!this.instrument) {
+        return null;
       }
 
       return state.getters['robinhood/quote'](this.instrument.symbol);
@@ -28,5 +28,5 @@ export default {
   components: {
     'ticker-link': TickerLink
   }
-}
+};
 </script>

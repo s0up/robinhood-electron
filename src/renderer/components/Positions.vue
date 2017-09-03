@@ -25,68 +25,69 @@ import Position from '@/components/Positions/Position';
 import PositionTable from '@/components/Positions/PositionTable';
 
 export default {
-   name: 'positions',
-   created(){
-     this.getPositions();
-   },
-   data(){
-     return {
-       positionTimer: setTimeout(function(){}, 0)
-     }
-   },
-   computed: {
-      positions: function(){
-         return state.getters['robinhood/positions'];
-      },
-      nextPosition: function(){
-         return state.getters['robinhood/nextPosition'];
-      },
-      previousPosition: function(){
-         return state.getters['robinhood/previousPosition'];
-      },
-      dayHistoricals(){
-        return state.getters['robinhood/historical']({
+  name: 'positions',
+  created() {
+    this.getPositions();
+  },
+  data() {
+    return {
+      positionTimer: setTimeout(() => {}, 0)
+    };
+  },
+  computed: {
+    positions() {
+      return state.getters['robinhood/positions'];
+    },
+    nextPosition() {
+      return state.getters['robinhood/nextPosition'];
+    },
+    previousPosition() {
+      return state.getters['robinhood/previousPosition'];
+    },
+    dayHistoricals() {
+      return state.getters['robinhood/historical']({
+        interval: '5minute',
+        span: 'day'
+      });
+    },
+    account() {
+      return state.getters['robinhood/currentAccount'];
+    },
+    gainsToday() {
+      // eslint-disable-next-line max-len
+      return this.dayHistoricals.adjusted_open_equity - this.dayHistoricals.adjusted_previous_close_equity;
+    }
+  },
+  beforeDestroy() {
+    clearTimeout(this.positionTimer);
+  },
+  methods: {
+    async getPositions() {
+      clearTimeout(this.positionTimer);
+
+      try {
+        await state.dispatch('robinhood/getPositions');
+        await state.dispatch('robinhood/getHistoricals', {
+          account_number: this.account.account_number,
           interval: '5minute',
           span: 'day'
         });
-      },
-      account(){
-        return state.getters['robinhood/currentAccount'];
-      },
-      gainsToday(){
-        return this.dayHistoricals.adjusted_open_equity - this.dayHistoricals.adjusted_previous_close_equity;
+      } catch (e) {
+        console.log('Error retrieving positions', e);
       }
-   },
-   beforeDestroy(){
-     clearTimeout(this.positionTimer);
-   },
-   methods: {
-      async getPositions(){
-        clearTimeout(this.positionTimer);
 
-        try{
-          await state.dispatch('robinhood/getPositions');
-          await state.dispatch('robinhood/getHistoricals', {
-            account_number: this.account.account_number,
-            interval: '5minute',
-            span: 'day'
-          });
-        }catch(e){
-          console.log("Error retrieving positions", e);
-        }
-
-        this.positionTimer = setTimeout(this.getPositions, 10000);
-      },
-      nextPage: function(){
-         state.dispatch('robinhood/getPositions', self.nextPosition);
-      },
-      previousPage: function(){
-         state.dispatch('robinhood/getPositions', self.previousPosition);
-      }
-   },
-   components: {
-      'position' : Position,
-      'position-table': PositionTable
-   }
-}
+      this.positionTimer = setTimeout(this.getPositions, 10000);
+    },
+    nextPage() {
+      state.dispatch('robinhood/getPositions', self.nextPosition);
+    },
+    previousPage() {
+      state.dispatch('robinhood/getPositions', self.previousPosition);
+    }
+  },
+  components: {
+    position: Position,
+    'position-table': PositionTable
+  }
+};
 </script>
