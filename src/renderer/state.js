@@ -22,25 +22,17 @@ const actions = {
     });
   }
 };
-// mutations are operations that actually mutates the state.
-// each mutation handler gets the entire state tree as the
-// first argument, followed by additional payload arguments.
-// mutations must be synchronous and can be recorded by plugins
-// for debugging purposes.
+
 const mutations = {
   setFatalError: (state, error) => { state.fatalError = error; },
   setUpdateAvailable: (state, update) => { state.updateAvailable = update; }
 };
 
-
-// getters are functions
 const getters = {
   fatalError: state => state.fatalError,
   updateAvailable: state => state.updateAvailable
 };
 
-// A Vuex instance is created by combining the state, mutations, actions,
-// and getters.
 export default new Vuex.Store({
   state,
   getters,
