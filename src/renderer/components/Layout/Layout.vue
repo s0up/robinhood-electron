@@ -13,8 +13,8 @@
 </template>
 <script>
 import state from '@/state';
-import Nav from '@/components/Nav';
-import Footer from '@/components/Footer';
+import Nav from '@/components/Layout/Nav';
+import Footer from '@/components/Layout/Footer';
 
 export default {
   async created() {

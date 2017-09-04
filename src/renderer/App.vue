@@ -9,8 +9,8 @@
 </template>
 <script>
 import LoginPage from '@/components/LoginPage';
-import WindowTop from '@/components/Common/WindowTop';
-import Layout from '@/components/Layout';
+import WindowTop from '@/components/Layout/WindowTop';
+import Layout from '@/components/Layout/Layout';
 import state from '@/state';
 
 export default {

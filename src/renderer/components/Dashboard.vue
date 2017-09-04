@@ -59,7 +59,7 @@ export default {
       console.log('Error retrieving dashboard data...', e);
     }
   },
-  data() { // Initializes ChartOptions as null
+  data() {
     return {
       currentWatchlist: null,
     };

@@ -13,7 +13,7 @@
 <script>
 import state from '@/state';
 import moment from 'moment';
-import TickerLink from '@/components/Common/TickerLink';
+import TickerLink from '@/components/TickerLink';
 
 export default {
   name: 'position',

@@ -144,7 +144,7 @@ import NewOrder from '@/components/NewOrder';
 import Position from '@/components/Positions/Position';
 import PositionTable from '@/components/Positions/PositionTable';
 import QuoteHistoricals from '@/components/Graphs/QuoteHistoricals';
-import TickerLink from '@/components/Common/TickerLink';
+import TickerLink from '@/components/TickerLink';
 
 import state from '@/state';
 import util from '@/util/util';

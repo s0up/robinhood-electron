@@ -46,7 +46,7 @@ url:"https://api.robinhood.com/orders/821ad684-5c10-44cb-a762-1c5da0735fa8/"
 
 import state from '@/state';
 import moment from 'moment';
-import TickerLink from '@/components/Common/TickerLink';
+import TickerLink from '@/components/TickerLink';
 
 export default {
   name: 'recent-order',

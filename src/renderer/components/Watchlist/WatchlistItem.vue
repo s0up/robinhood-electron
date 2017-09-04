@@ -8,7 +8,7 @@
   </tr>
 </template>
 <script>
-import TickerLink from '@/components/Common/TickerLink';
+import TickerLink from '@/components/TickerLink';
 import state from '@/state';
 
 export default {
