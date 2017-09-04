@@ -35,8 +35,8 @@
     </div>
   </div>
   <portfolio-historicals></portfolio-historicals>
-  <hr>
   <div v-if="currentWatchlist" class='watchlist'>
+    <hr>
     <h3>Watchlist</h3>
     <watchlist :watchlist="currentWatchlist"></watchlist>
   </div>
