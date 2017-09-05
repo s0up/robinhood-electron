@@ -1,20 +1,26 @@
 <template>
-  <div class='quote-historicals'>
-    <ul class="nav nav-tabs nav-justified">
-      <li role="presentation" v-bind:class="{'active': historicalSpan === 'day'}" @click="historicalSpan = 'day'; historicalInterval = '5minute'"><a>Day</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan === 'week'}" @click="historicalSpan = 'week'; historicalInterval = '10minute'"><a>Week</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan === 'month'}" @click="historicalSpan = 'month'; historicalInterval = 'day'"><a>Month</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan === '3month'}" @click="historicalSpan = '3month'; historicalInterval = 'day'"><a>3 Month</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan === 'year'}" @click="historicalSpan = 'year'; historicalInterval = 'day'"><a>Year</a></li>
-      <li role="presentation" v-bind:class="{'active': historicalSpan === '5year'}" @click="historicalSpan = '5year'; historicalInterval = 'week'"><a>5 Year</a></li>
-    </ul>
-    <div class="graph-loading text-center" v-if="graphLoading">
-      <img style="width: 50px; margin: 40px auto;" src="~@/assets/loading.gif"/>
-    </div>
-    <div class="small" v-if="lineGraphData && !graphLoading">
-      <line-chart :chart-data="lineGraphData" :options="chartOptions"></line-chart>
-    </div>
+<div class='quote-historicals'>
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation" v-bind:class="{'active': historicalSpan === 'day'}" @click="historicalSpan = 'day'; historicalInterval = '5minute'"><a>Day</a></li>
+    <li role="presentation" v-bind:class="{'active': historicalSpan === 'week'}" @click="historicalSpan = 'week'; historicalInterval = '10minute'"><a>Week</a></li>
+    <li role="presentation" v-bind:class="{'active': historicalSpan === 'month'}" @click="historicalSpan = 'month'; historicalInterval = 'day'"><a>Month</a></li>
+    <li role="presentation" v-bind:class="{'active': historicalSpan === '3month'}" @click="historicalSpan = '3month'; historicalInterval = 'day'"><a>3 Month</a></li>
+    <li role="presentation" v-bind:class="{'active': historicalSpan === 'year'}" @click="historicalSpan = 'year'; historicalInterval = 'day'"><a>Year</a></li>
+    <li role="presentation" v-bind:class="{'active': historicalSpan === '5year'}" @click="historicalSpan = '5year'; historicalInterval = 'week'"><a>5 Year</a></li>
+  </ul>
+  <div class="graph-loading text-center" v-if="graphLoading">
+    <img style="width: 50px; margin: 40px auto;" src="~@/assets/loading.gif" />
   </div>
+  <div class="line-graph small" v-if="lineGraphData && !graphLoading">
+    <div class='line-graph-title'>
+      <span>
+        <span v-bind:class="{'text-danger': (change < 0), 'text-success': (change > 0)}">{{changePretty}} [{{changePercent}}]</span>
+        <small v-if="ahChange && ahChange != 0" v-bind:class="{'text-danger': (ahChange < 0), 'text-success': (ahChange > 0)}">({{ahChangePretty}} After Hours)</small>
+      </span>
+    </div>
+    <line-chart :chart-data="lineGraphData" :options="chartOptions"></line-chart>
+  </div>
+</div>
 </template>
 <script>
 import moment from 'moment';
@@ -32,13 +38,22 @@ export default {
       updateTimer: setTimeout(() => {}, 0),
       historicalInterval: '5minute',
       historicalSpan: 'day',
-      graphLoading: false
+      graphLoading: false,
+      change: null,
+      changePercent: null,
+      ahChange: null
     };
   },
   beforeDestroy() {
     clearTimeout(this.updateTimer);
   },
   computed: {
+    changePretty() {
+      return util.formatMoney(this.change, true);
+    },
+    ahChangePretty() {
+      return util.formatMoney(this.ahChange, true);
+    },
     symbol() {
       return this.$route.params.symbol;
     },
@@ -160,29 +175,20 @@ export default {
 
       console.log('QUOTE EQUITY:', last - first, 'AFTER HOURS:', ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
 
-      const change = (last - first).toFixed(2);
-
-      let title = `${util.formatMoney(change, true)} [${util.formatPercent(first, last)}]`;
+      this.change = (last - first).toFixed(2);
+      this.changePercent = util.formatPercent(first, last);
 
       if (afterHours) {
-        const ahChange = (afterHours.last - afterHours.first).toFixed(2);
-
-        title += ` (${util.formatMoney(ahChange - change, true)} A.H)`;
+        this.ahChange = (afterHours.last - afterHours.first).toFixed(2);
+      } else {
+        this.ahChange = null;
       }
 
       this.chartOptions = {
-        title: {
-          display: true,
-          text: title,
-          fontSize: 18,
-          fontColor: (change < 0) ? '#fc4d2d' : '#21ce99',
-          position: 'top',
-          padding: 20
-        },
         maintainAspectRatio: false,
         responsive: true,
         legend: {
-          display: true,
+          display: false,
           labels: {
             fontColor: '#FFFFFF'
           }
@@ -190,10 +196,23 @@ export default {
         tooltips: {
           mode: 'index',
           intersect: false,
+          callbacks: {
+            label(value) {
+              return `Price: ${util.formatMoney(value.yLabel)}`;
+            }
+          }
         },
         hover: {
           mode: 'nearest',
           intersect: true
+        },
+        layout: {
+          padding: {
+            left: 10,
+            right: 10,
+            top: 60,
+            bottom: 0
+          }
         },
         scales: {
           yAxes: [{
@@ -211,6 +230,9 @@ export default {
             ticks: {
               beginAtZero: false,
               fontColor: '#FFFFFF',
+              callback(value) {
+                return util.formatMoney(value);
+              }
             }
           }],
           xAxes: [{

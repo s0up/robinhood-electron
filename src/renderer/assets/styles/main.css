@@ -319,3 +319,20 @@ h3 {
   background-color: #121418;
   border: 1px solid #fff;
 }
+
+.line-graph{
+  position: relative;
+}
+
+.line-graph-title{
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 24px;
+}
+
+.line-graph-title span{
+  padding: 0px;
+  margin: 0px;
+}

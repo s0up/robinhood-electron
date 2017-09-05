@@ -1,21 +1,27 @@
 <template>
-  <div class='portfolio-historicals'>
-    <ul class="nav nav-tabs nav-justified">
-      <li role="presentation" v-bind:class="{'active': graphSpan == 'day'}" @click="graphSpan = 'day'; graphInterval = '5minute'"><a>Day</a></li>
-      <li role="presentation" v-bind:class="{'active': graphSpan == 'week'}" @click="graphSpan = 'week'; graphInterval = '10minute'"><a>Week</a></li>
-      <li role="presentation" v-bind:class="{'active': graphSpan == 'month'}" @click="graphSpan = 'month'; graphInterval = 'day'"><a>Month</a></li>
-      <li role="presentation" v-bind:class="{'active': graphSpan == '3month'}" @click="graphSpan = '3month'; graphInterval = 'day'"><a>3 Month</a></li>
-      <li role="presentation" v-bind:class="{'active': graphSpan == 'year'}" @click="graphSpan = 'year'; graphInterval = 'day'"><a>Year</a></li>
-      <li role="presentation" v-bind:class="{'active': graphSpan == '5year'}" @click="graphSpan = '5year'; graphInterval = 'week'"><a>5 Year</a></li>
-      <li role="presentation" v-bind:class="{'active': graphSpan == 'all'}" @click="graphSpan = 'all'; graphInterval = ''"><a>All</a></li>
-    </ul>
-    <div class="graph-loading text-center" v-if="graphLoading">
-      <img style="width: 50px; margin: 40px auto;" src="~@/assets/loading.gif"/>
-    </div>
-    <div class="small" v-if="graphData && !graphLoading">
-      <line-chart :chart-data="graphData" :options="chartOptions"></line-chart>
-    </div>
+<div class='portfolio-historicals'>
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation" v-bind:class="{'active': graphSpan == 'day'}" @click="graphSpan = 'day'; graphInterval = '5minute'"><a>Day</a></li>
+    <li role="presentation" v-bind:class="{'active': graphSpan == 'week'}" @click="graphSpan = 'week'; graphInterval = '10minute'"><a>Week</a></li>
+    <li role="presentation" v-bind:class="{'active': graphSpan == 'month'}" @click="graphSpan = 'month'; graphInterval = 'day'"><a>Month</a></li>
+    <li role="presentation" v-bind:class="{'active': graphSpan == '3month'}" @click="graphSpan = '3month'; graphInterval = 'day'"><a>3 Month</a></li>
+    <li role="presentation" v-bind:class="{'active': graphSpan == 'year'}" @click="graphSpan = 'year'; graphInterval = 'day'"><a>Year</a></li>
+    <li role="presentation" v-bind:class="{'active': graphSpan == '5year'}" @click="graphSpan = '5year'; graphInterval = 'week'"><a>5 Year</a></li>
+    <li role="presentation" v-bind:class="{'active': graphSpan == 'all'}" @click="graphSpan = 'all'; graphInterval = ''"><a>All</a></li>
+  </ul>
+  <div class="graph-loading text-center" v-if="graphLoading">
+    <img style="width: 50px; margin: 40px auto;" src="~@/assets/loading.gif" />
   </div>
+  <div class="line-graph small" v-if="graphData && !graphLoading">
+    <div class='line-graph-title'>
+      <span>
+        <span v-bind:class="{'text-danger': (change < 0), 'text-success': (change > 0)}">{{changePretty}} [{{changePercent}}]</span>
+        <small v-if="ahChange && ahChange != 0" v-bind:class="{'text-danger': (ahChange < 0), 'text-success': (ahChange > 0)}">({{ahChangePretty}} After Hours)</small>
+      </span>
+    </div>
+    <line-chart :chart-data="graphData" :options="chartOptions"></line-chart>
+  </div>
+</div>
 </template>
 <script>
 import moment from 'moment';
@@ -38,10 +44,19 @@ export default {
       accountNumber: null,
       currentWatchlist: null,
       graphLoading: false,
-      gains: {}
+      gains: {},
+      change: null,
+      changePercent: null,
+      ahChange: null
     };
   },
   computed: {
+    changePretty() {
+      return util.formatMoney(this.change, true);
+    },
+    ahChangePretty() {
+      return util.formatMoney(this.ahChange, true);
+    },
     account() {
       return state.getters['robinhood/currentAccount'];
     },
@@ -144,11 +159,11 @@ export default {
         }
       } else {
         last = (this.portfolio.extended_hours_equity) ?
-          Number(this.portfolio.extended_hours_equity).toFixed(2)
-          : Number(this.portfolio.equity).toFixed(2);
+          Number(this.portfolio.extended_hours_equity).toFixed(2) :
+          Number(this.portfolio.equity).toFixed(2);
 
-        first = data.equity_historicals[0].adjusted_open_equity
-          || data.equity_historicals[0].close_price;
+        first = data.equity_historicals[0].adjusted_open_equity ||
+          data.equity_historicals[0].close_price;
       }
 
       console.log('EQUITY:', last - first, 'AFTER HOURS:', ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
@@ -157,29 +172,20 @@ export default {
       this.$set(this.gains, 'first', first);
       this.$set(this.gains, 'after_hours', afterHours);
 
-      const change = (last - first).toFixed(2);
-
-      let title = `${util.formatMoney(change, true)} [${util.formatPercent(first, last)}]`;
+      this.change = (last - first).toFixed(2);
+      this.changePercent = util.formatPercent(first, last);
 
       if (afterHours) {
-        const ahChange = (afterHours.last - afterHours.first).toFixed(2);
-
-        title += ` (${util.formatMoney(ahChange - change, true)} A.H)`;
+        this.ahChange = ((afterHours.last - afterHours.first) - this.change).toFixed(2);
+      } else {
+        this.ahChange = null;
       }
 
       this.chartOptions = {
-        title: {
-          display: true,
-          text: title,
-          fontSize: 18,
-          fontColor: (change < 0) ? '#fc4d2d' : '#21ce99',
-          position: 'top',
-          padding: 20
-        },
         maintainAspectRatio: false,
         responsive: true,
         legend: {
-          display: true,
+          display: false,
           labels: {
             fontColor: '#FFFFFF'
           }
@@ -187,10 +193,23 @@ export default {
         tooltips: {
           mode: 'index',
           intersect: false,
+          callbacks: {
+            label(value) {
+              return `Equity: ${util.formatMoney(value.yLabel)}`;
+            }
+          }
         },
         hover: {
           mode: 'nearest',
           intersect: true
+        },
+        layout: {
+          padding: {
+            left: 10,
+            right: 10,
+            top: 60,
+            bottom: 0
+          }
         },
         scales: {
           yAxes: [{
@@ -208,6 +227,9 @@ export default {
             ticks: {
               beginAtZero: false,
               fontColor: '#FFFFFF',
+              callback(value) {
+                return util.formatMoney(value);
+              }
             }
           }],
           xAxes: [{
