@@ -11,6 +11,8 @@
       </div>
       <div class="col-xs-6 text-right">
         <div class="" v-if="quote">
+          <button @click="unwatch" v-if="isWatching && !reordering" class="btn btn-green">Unwatch</button>
+          <button @click="watch" v-if="isWatching === false && !reordering" class="btn btn-green">Watch</button>
           <button v-if="currentPosition && !isBuying" v-on:click="isBuying = true; buySide = 'buy'" class="btn btn-green">Buy More</button>
           <button v-if="currentPosition && !isBuying" v-on:click="isBuying = true;  buySide = 'sell'" class="btn btn-warning">Sell</button>
           <button v-if="!currentPosition && !isBuying" v-on:click="isBuying = true; buySide = 'buy'" class="btn btn-green">Buy</button>
@@ -168,10 +170,24 @@ export default {
       isBuying: false,
       buySide: 'buy',
       quoteError: false,
-      activeTab: 'price'
+      activeTab: 'price',
+      reordering: false
     };
   },
   computed: {
+    isWatching() {
+      if (!this.defaultWatchlist || !this.instrument) {
+        return null;
+      }
+
+      if (this.defaultWatchlist.instruments.find(item => item.id === this.instrument.id)) {
+        return true;
+      }
+      return false;
+    },
+    defaultWatchlist() {
+      return state.getters['robinhood/watchlistData']('https://api.robinhood.com/watchlists/Default/');
+    },
     symbol() {
       return this.$route.params.symbol;
     },
@@ -243,6 +259,40 @@ export default {
     },
     formatMoney(money) {
       return util.formatMoney(money);
+    },
+    async watch() {
+      try {
+        const uuids = this.defaultWatchlist.instruments.map(item => item.id);
+
+        uuids.push(this.instrument.id);
+
+        this.reordering = true;
+        await state.dispatch('robinhood/reorderWatchlist',
+        { name: 'Default', uuids: uuids.join(',') });
+        await state.dispatch('robinhood/getWatchlist', 'https://api.robinhood.com/watchlists/Default/');
+        this.reordering = false;
+      } catch (e) {
+        console.log('WATCHLIST: Unable to reorder watchlist', e);
+      }
+    },
+
+    async unwatch() {
+      try {
+        const uuids = this.defaultWatchlist.instruments.map(item => item.id)
+          .filter(item => item.id === this.instrument.id);
+
+        if (uuids.length === 0) {
+          uuids.push('NULL'); // To prevent blank api err
+        }
+
+        this.reordering = true;
+        await state.dispatch('robinhood/reorderWatchlist',
+        { name: 'Default', uuids: uuids.join(',') });
+        await state.dispatch('robinhood/getWatchlist', 'https://api.robinhood.com/watchlists/Default/');
+        this.reordering = false;
+      } catch (e) {
+        console.log('WATCHLIST: Unable to reorder watchlist', e);
+      }
     }
   },
   components: {

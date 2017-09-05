@@ -381,6 +381,14 @@ export default {
       }
     },
 
+    async reorderWatchlist(state, list) {
+      try {
+        return await util.post('/robinhood/reorderWatchlist', { list });
+      } catch (e) {
+        throw e;
+      }
+    },
+
     async getCards(state) {
       try {
         const cards = await util.post('/robinhood/getCards');
@@ -546,7 +554,7 @@ export default {
     addWatchlistData: (state, watchlistData) => {
       const existingItem = state.watchlistData.findIndex(item => item.url === watchlistData.url);
 
-      if (existingItem) {
+      if (existingItem !== -1) {
         state.watchlistData.splice(existingItem, 1);
       }
 
@@ -658,6 +666,7 @@ export default {
     watchlistData: state => url => state.watchlistData.find(item => item.url === url),
 
     watchlists: state => state.watchlists,
+
     cards: state => state.cards
   }
 };

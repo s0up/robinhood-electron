@@ -285,6 +285,14 @@ export default class {
     }
   }
 
+  async reorderWatchlist(list) {
+    try {
+      return await this.api.reorderWatchlist(list);
+    } catch (e) {
+      throw e;
+    }
+  }
+
   async getCards() {
     try {
       return await this.api.getCards();

@@ -8,9 +8,10 @@
           <th>Previous Close Price</th>
           <th>Ask Price</th>
           <th>Bid Price</th>
+          <th style='text-align: center'>Remove</th>
         </tr>
       </thead>
-      <watchlist-item :data="watchlistItem" v-for="watchlistItem in watchlistData.results" :key="watchlistItem.url" v-on:delete="deleteWatchlistItem(watchlistItem)"></watchlist-item>
+      <watchlist-item @remove="deleteWatchlistItem" :data="watchlistItem" v-for="watchlistItem in watchlistData.results" :key="watchlistItem.url" v-on:delete="deleteWatchlistItem(watchlistItem)"></watchlist-item>
     </table>
   </div>
 </template>
@@ -45,8 +46,23 @@ export default {
 
       this.watchlist_timer = setTimeout(() => this.updateWatchlist(), 60000);
     },
-    deleteWatchlistItem(item) {
-      console.log('Deletign item', item);
+    async deleteWatchlistItem(item) {
+      const uuids = this.watchlistData.instruments.filter(
+        row => row.url !== item.instrument
+      ).map(
+        row => row.id
+      );
+
+      if (uuids.length === 0) {
+        uuids.push('NULL'); // To prevent api error when attempting to remove the last item
+      }
+
+      try {
+        await state.dispatch('robinhood/reorderWatchlist', { name: 'Default', uuids: uuids.join(',') });
+        await state.dispatch('robinhood/getWatchlist', 'https://api.robinhood.com/watchlists/Default/');
+      } catch (e) {
+        console.log('WATCHLIST: Unable to reorder watchlist', e);
+      }
     }
   },
   beforeDestroy() {
