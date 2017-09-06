@@ -64,38 +64,7 @@
               </div>
           </div>
         </div>
-      </div>
-      <!-- Price info end -->
-      <div v-if="activeTab === 'companyInfo'">
-        <div class="clear">&nbsp;</div>
         <div class="row stock-info-buttons">
-          <div class="col-sm-3">
-            <div class="input-group">
-              <div class="input-group-addon">Dividend Yield</div>
-              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.dividend_yield)" readonly>
-            </div>
-          </div>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <div class="input-group-addon">P/E Ratio</div>
-              <input v-if="fundamentals.pe_ratio" type="text" class="form-control"  v-bind:value="fundamentals.pe_ratio" readonly>
-              <input v-else type="text" class="form-control" v-bind:value="'N/A'" readonly>
-            </div>
-          </div>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <div class="input-group-addon">Average Volume</div>
-              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.volume)" readonly>
-            </div>
-          </div>
-          <div class="col-sm-3">
-            <div class="input-group">
-              <div class="input-group-addon">Market Cap</div>
-              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.market_cap)" readonly>
-            </div>
-          </div>
-        </div>
-        <div class="row">
           <div class="col-sm-3">
             <div class="input-group">
               <div class="input-group-addon">High</div>
@@ -122,6 +91,68 @@
           </div>
         </div>
       </div>
+      <!-- Price info end -->
+      <div v-if="activeTab === 'companyInfo'">
+        <div class="clear">&nbsp;</div>
+        <div class="row stock-info-buttons">
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">Dividend Yield</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.dividend_yield).replace('$', '')" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">P/E Ratio</div>
+              <input v-if="fundamentals.pe_ratio" type="text" class="form-control"  v-bind:value="fundamentals.pe_ratio" readonly>
+              <input v-else type="text" class="form-control" v-bind:value="'N/A'" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">Average Volume</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.volume)" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">Market Cap</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.market_cap)" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">Num Employees</div>
+              <input type="text" class="form-control"  v-bind:value="formatMoney(fundamentals.num_employees).replace('$', '')" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">CEO</div>
+              <input type="text" class="form-control"  v-bind:value="fundamentals.ceo" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">Headquarters City</div>
+              <input type="text" class="form-control"  v-bind:value="fundamentals.headquarters_city" readonly>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group">
+              <div class="input-group-addon">Headquarters State</div>
+              <input type="text" class="form-control"  v-bind:value="fundamentals.headquarters_state" readonly>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-if="fundamentals">
+      <hr>
+      <h3>Company Bio</h3>
+      <p>{{fundamentals.description}}</p>
     </div>
     <div v-if="news" class="table-responsive">
       <hr>
