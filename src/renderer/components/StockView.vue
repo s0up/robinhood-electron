@@ -64,7 +64,7 @@
               </div>
           </div>
         </div>
-        <div class="row stock-info-buttons">
+        <div v-if="fundamentals" class="row stock-info-buttons">
           <div class="col-sm-3">
             <div class="input-group">
               <div class="input-group-addon">High</div>

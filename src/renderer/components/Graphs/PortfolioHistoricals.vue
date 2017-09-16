@@ -16,7 +16,13 @@
     <div class='line-graph-title'>
       <span>
         <span v-bind:class="{'text-danger': (change < 0), 'text-success': (change > 0)}">{{changePretty}} [{{changePercent}}]</span>
-        <small v-if="ahChange && ahChange != 0" v-bind:class="{'text-danger': (ahChange < 0), 'text-success': (ahChange > 0)}">({{ahChangePretty}} After Hours)</small>
+        <small>
+          <small
+            v-if="ahChange && ahChange != 0"
+            v-bind:class="{'text-danger': (ahChange < 0), 'text-success': (ahChange > 0)}">
+            ({{ahChangePretty}} [{{ahChangePercent}}] After Hours)
+          </small>
+       </small>
       </span>
     </div>
     <line-chart :chart-data="graphData" :options="chartOptions"></line-chart>
@@ -47,6 +53,7 @@ export default {
       gains: {},
       change: null,
       changePercent: null,
+      ahChangePercent: null,
       ahChange: null
     };
   },
@@ -166,8 +173,6 @@ export default {
           data.equity_historicals[0].close_price;
       }
 
-      console.log('EQUITY:', last - first, 'AFTER HOURS:', ((afterHours) ? ((afterHours.last - afterHours.first) - (last - first)) : 'N/A'));
-
       this.$set(this.gains, 'last', last);
       this.$set(this.gains, 'first', first);
       this.$set(this.gains, 'after_hours', afterHours);
@@ -177,6 +182,7 @@ export default {
 
       if (afterHours) {
         this.ahChange = ((afterHours.last - afterHours.first) - this.change).toFixed(2);
+        this.ahChangePercent = util.formatPercent(last, afterHours.last);
       } else {
         this.ahChange = null;
       }
