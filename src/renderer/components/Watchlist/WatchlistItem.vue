@@ -3,6 +3,7 @@
     <td><ticker-link :symbol="instrument.symbol"></ticker-link></td>
     <td v-money="quote.last_trade_price"></td>
     <td v-money="quote.adjusted_previous_close"></td>
+    <td v-money="quote.last_extended_hours_trade_price"></td>
     <td v-money="quote.ask_price"></td>
     <td v-money="quote.bid_price"></td>
     <td class='text-center'><span @click="remove" role="button" class="glyphicon glyphicon-remove"></span></td>

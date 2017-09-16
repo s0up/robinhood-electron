@@ -5,7 +5,7 @@ import state from '@/state';
 
 /* User def components */
 import Dashboard from '@/components/Dashboard';
-import Positions from '@/components/Positions';
+import Watchlist from '@/components/Watchlist';
 import RecentOrders from '@/components/RecentOrders';
 import StockView from '@/components/StockView';
 import Banking from '@/components/Banking';
@@ -13,11 +13,12 @@ import Banking from '@/components/Banking';
 Vue.use(Router);
 
 const router = new Router({
+  linkExactActiveClass: 'active',
   routes: [
     {
-      path: '/positions',
-      name: 'positions',
-      component: Positions
+      path: '/watchlist',
+      name: 'watchlist',
+      component: Watchlist
     },
     {
       path: '/recent-orders',

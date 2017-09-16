@@ -122,6 +122,10 @@ export default {
       const priceData = [];
       const priceLabelData = [];
 
+      if (!this.quote) {
+        return null;
+      }
+
       let momentFormat = 'LT';
 
       switch (data.span) {

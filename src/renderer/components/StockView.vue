@@ -31,7 +31,7 @@
       </position-table>
     </div>
     <hr>
-    <div class='stock-extra-info'>
+    <div class='stock-extra-info' v-if="quote">
       <ul class="nav nav-pills nav-justified">
         <li role="presentation" v-bind:class="{'active': activeTab === 'price'}" @click="activeTab = 'price'"><a>Price Information</a></li>
         <li role="presentation" v-bind:class="{'active': activeTab === 'companyInfo'}" @click="activeTab = 'companyInfo'"><a>Company Fundamentals</a></li>
@@ -276,7 +276,7 @@ export default {
       this.loaded = true;
     },
     instrument(instrument) {
-      if (!this.fundamentals) {
+      if (!this.fundamentals && instrument) {
         state.dispatch('robinhood/getResource', instrument.fundamentals);
       }
     }

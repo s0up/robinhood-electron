@@ -35,11 +35,8 @@
     </div>
   </div>
   <portfolio-historicals></portfolio-historicals>
-  <div v-if="currentWatchlist" class='watchlist'>
-    <hr>
-    <h3>Watchlist</h3>
-    <watchlist :watchlist="currentWatchlist"></watchlist>
-  </div>
+  <hr>
+  <positions></positions>
   <hr>
   <h3>Notifications</h3>
   <notification-cards></notification-cards>
@@ -49,21 +46,9 @@
 import state from '@/state';
 import NotificationCards from '@/components/NotificationCards';
 import PortfolioHistoricals from '@/components/Graphs/PortfolioHistoricals';
-import Watchlist from '@/components/Watchlist';
+import Positions from '@/components/Positions';
 
 export default {
-  async created() { // Requests historical data from Robinhood for the following attributes
-    try {
-      await state.dispatch('robinhood/getWatchlists');
-    } catch (e) {
-      console.log('Error retrieving dashboard data...', e);
-    }
-  },
-  data() {
-    return {
-      currentWatchlist: null,
-    };
-  },
   computed: {
     account() {
       return state.getters['robinhood/currentAccount'];
@@ -73,20 +58,10 @@ export default {
     },
     portfolio() {
       return state.getters['robinhood/resource'](this.account.portfolio);
-    },
-    watchlists() {
-      return state.getters['robinhood/watchlists'];
-    }
-  },
-  watch: {
-    watchlists(watchlists) {
-      if (!this.currentWatchlist) {
-        this.currentWatchlist = watchlists[0];
-      }
     }
   },
   components: {
-    watchlist: Watchlist,
+    positions: Positions,
     'portfolio-historicals': PortfolioHistoricals,
     'notification-cards': NotificationCards
   }

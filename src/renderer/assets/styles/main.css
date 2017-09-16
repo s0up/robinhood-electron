@@ -296,10 +296,6 @@ h3 {
   color: #fff;
 }
 
-.watchlist-tbl thead tr th{
-  text-align: left;
-}
-
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
   background-color: #222428;
 }
