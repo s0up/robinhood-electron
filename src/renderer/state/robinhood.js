@@ -111,7 +111,7 @@ export default {
 
         state.commit('setNextPosition', data.result.next);
         state.commit('setPrevousPosition', data.result.previous);
-        state.commit('setPositions', data.result.results);
+        state.commit('setPositions', data.result.results.filter(item => item.quantity > 0));
 
         data.result.instruments.forEach((instrument) => {
           state.commit('addInstrument', instrument);
